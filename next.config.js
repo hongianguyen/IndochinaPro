@@ -9,9 +9,9 @@ const nextConfig = {
       '@langchain/community',
       'openai',
       '@supabase/supabase-js',
+      'pdfkit',
     ],
   },
-
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
@@ -19,5 +19,4 @@ const nextConfig = {
     ],
   },
 }
-
 module.exports = nextConfig

@@ -1,196 +1,241 @@
 import 'server-only'
 import type { Itinerary, DayData } from '@/types'
 
-const NAVY = '#0d1f3d'
+// Colors
 const NAVY_DARK = '#08152a'
-const NAVY_MED = '#1a3a6b'
-const GOLD = '#d4a017'
-const CREAM = '#f9f2e3'
+const NAVY_MED  = '#1a3a6b'
+const GOLD      = '#d4a017'
+const CREAM     = '#f9f2e3'
+const WHITE     = '#ffffff'
 
 export async function generatePDF(itinerary: Itinerary): Promise<Buffer> {
-  // Dynamic import to avoid SSR issues
-  const {
-    Document, Page, Text, View, StyleSheet, Image, Font, pdf
-  } = await import('@react-pdf/renderer')
+  const PDFDocument = (await import('pdfkit')).default
 
-  Font.register({
-    family: 'Helvetica',
-    fonts: [],
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: 'A4',
+      margin: 0,
+      info: {
+        Title: itinerary.title,
+        Author: 'Indochina Travel Pro',
+      },
+    })
+
+    const chunks: Buffer[] = []
+    doc.on('data', (chunk: Buffer) => chunks.push(chunk))
+    doc.on('end', () => resolve(Buffer.concat(chunks)))
+    doc.on('error', reject)
+
+    const W = 595.28  // A4 width in points
+    const H = 841.89  // A4 height in points
+
+    const hexToRgb = (hex: string): [number, number, number] => {
+      const r = parseInt(hex.slice(1, 3), 16)
+      const g = parseInt(hex.slice(3, 5), 16)
+      const b = parseInt(hex.slice(5, 7), 16)
+      return [r, g, b]
+    }
+
+    const fill = (hex: string) => doc.fillColor(hexToRgb(hex))
+    const stroke = (hex: string) => doc.strokeColor(hexToRgb(hex))
+
+    // ── COVER PAGE ──────────────────────────────────────────────────────────
+    // Background
+    doc.rect(0, 0, W, H).fill(hexToRgb(NAVY_DARK))
+
+    // Gold accent line left
+    doc.rect(50, 60, 3, 120).fill(hexToRgb(GOLD))
+
+    // Logo
+    fill(CREAM).fontSize(18).font('Helvetica-Bold')
+      .text('Indochina Travel', 65, 70)
+    fill(GOLD).fontSize(8).font('Helvetica')
+      .text('P R O  ·  A I  I T I N E R A R Y', 65, 94, { characterSpacing: 3 })
+
+    // Main title
+    fill(CREAM).fontSize(48).font('Helvetica-Bold')
+      .text(itinerary.title, 50, 180, { width: W - 100, lineGap: 4 })
+
+    // Subtitle
+    const titleHeight = doc.heightOfString(itinerary.title, { width: W - 100 })
+    fill(GOLD).fontSize(22).font('Helvetica-Oblique')
+      .text(itinerary.subtitle, 50, 200 + titleHeight, { width: W - 100 })
+
+    // Gold divider
+    const divY = H - 120
+    stroke(GOLD).opacity(0.3).lineWidth(1)
+      .moveTo(50, divY).lineTo(W - 50, divY).stroke()
+    doc.opacity(1)
+
+    // Bottom meta bar
+    doc.rect(0, H - 100, W, 100).fill(hexToRgb(NAVY_MED))
+
+    const metas = [
+      { label: 'THỜI GIAN', value: `${itinerary.request.duration} Ngày` },
+      { label: 'KHỞI HÀNH', value: itinerary.request.startPoint },
+      { label: 'ĐIỂM ĐẾN', value: itinerary.request.destinations.slice(0, 2).join(' · ') },
+      { label: 'NGÀY TẠO', value: new Date(itinerary.generatedAt).toLocaleDateString('vi-VN') },
+    ]
+
+    metas.forEach((m, i) => {
+      const x = 50 + i * (W - 100) / 4
+      fill(GOLD).fontSize(7).font('Helvetica').text(m.label, x, H - 85, { characterSpacing: 2 })
+      fill(CREAM).fontSize(11).font('Helvetica').text(m.value, x, H - 70)
+    })
+
+    // ── SUMMARY PAGE ────────────────────────────────────────────────────────
+    doc.addPage()
+    doc.rect(0, 0, W, H).fill(hexToRgb(CREAM))
+
+    fill(NAVY_DARK).fontSize(32).font('Helvetica-Bold')
+      .text('Tổng Quan Hành Trình', 50, 50)
+    stroke(GOLD).lineWidth(2).moveTo(50, 92).lineTo(W - 50, 92).stroke()
+
+    // Meta boxes
+    const boxes = [
+      { label: 'THỜI GIAN', value: `${itinerary.request.duration} Ngày` },
+      { label: 'KHỞI HÀNH', value: itinerary.request.startPoint },
+      { label: 'SỐ NGƯỜI', value: String(itinerary.request.groupSize || 'N/A') },
+      { label: 'PHONG CÁCH', value: itinerary.request.travelStyle || 'Standard' },
+    ]
+    const bw = (W - 100 - 30) / 4
+    boxes.forEach((b, i) => {
+      const bx = 50 + i * (bw + 10)
+      doc.rect(bx, 106, bw, 56).fill(hexToRgb(NAVY_DARK))
+      fill(GOLD).fontSize(7).font('Helvetica').text(b.label, bx + 10, 116, { characterSpacing: 2 })
+      fill(CREAM).fontSize(12).font('Helvetica-Bold').text(b.value, bx + 10, 132)
+    })
+
+    // Overview
+    fill(NAVY_DARK).fontSize(11).font('Helvetica')
+      .text(itinerary.overview || '', 50, 180, { width: W - 100, lineGap: 4 })
+
+    // Highlights
+    let hy = 280
+    fill(GOLD).fontSize(8).font('Helvetica').text('ĐIỂM NỔI BẬT', 50, hy, { characterSpacing: 2 })
+    hy += 20
+    itinerary.highlights.forEach(h => {
+      fill(GOLD).fontSize(8).text('◆', 50, hy)
+      fill(NAVY_DARK).fontSize(10).font('Helvetica').text(h, 66, hy, { width: W - 120 })
+      hy += doc.heightOfString(h, { width: W - 120 }) + 8
+    })
+
+    // Interests tags
+    if (itinerary.request.interests.length > 0) {
+      hy += 10
+      fill(GOLD).fontSize(8).font('Helvetica').text('SỞ THÍCH', 50, hy, { characterSpacing: 2 })
+      hy += 18
+      let tx = 50
+      itinerary.request.interests.forEach(interest => {
+        const tw = doc.widthOfString(interest) + 20
+        if (tx + tw > W - 50) { tx = 50; hy += 26 }
+        stroke(NAVY_MED).lineWidth(1).rect(tx, hy, tw, 20).stroke()
+        fill(NAVY_DARK).fontSize(9).font('Helvetica').text(interest, tx + 10, hy + 5)
+        tx += tw + 8
+      })
+    }
+
+    // ── DAY PAGES ───────────────────────────────────────────────────────────
+    itinerary.days.forEach((day: DayData) => {
+      doc.addPage()
+      doc.rect(0, 0, W, H).fill(hexToRgb('#f5ede0'))
+
+      // Day header
+      doc.rect(0, 0, W, 80).fill(hexToRgb(NAVY_DARK))
+
+      // Day number box
+      stroke(GOLD).lineWidth(1).rect(50, 14, 52, 52).stroke()
+      fill(GOLD).fontSize(7).font('Helvetica').text('NGÀY', 60, 22, { characterSpacing: 2 })
+      fill(CREAM).fontSize(28).font('Helvetica-Bold').text(String(day.dayNumber), 60, 32)
+
+      // Day highlights text
+      fill(CREAM).fontSize(16).font('Helvetica')
+        .text(day.highlights, 116, 20, { width: W - 170, lineGap: 3 })
+
+      let bodyY = 90
+
+      // Day image
+      if (day.imageUrl) {
+        try {
+          doc.image(day.imageUrl, 0, bodyY, { width: W, height: 120, cover: [W, 120] })
+          bodyY += 128
+        } catch {}
+      }
+
+      // Two column layout
+      const colW = (W - 120) / 2
+      const col1X = 50
+      const col2X = 50 + colW + 20
+      let y1 = bodyY + 10
+      let y2 = bodyY + 10
+
+      const drawField = (x: number, y: number, label: string, value: string, w: number, large = false): number => {
+        const bh = large ? 50 : Math.max(44, doc.heightOfString(value, { width: w - 20 }) + 24)
+        doc.rect(x, y, w, bh).fill(hexToRgb(NAVY_DARK))
+        fill(GOLD).fontSize(6).font('Helvetica').text(label, x + 10, y + 8, { characterSpacing: 2 })
+        if (large) {
+          fill(GOLD).fontSize(16).font('Helvetica-Bold').text(value, x + 10, y + 20)
+        } else {
+          fill(CREAM).fontSize(9).font('Helvetica').text(value, x + 10, y + 22, { width: w - 20 })
+        }
+        return y + bh + 6
+      }
+
+      // Column 1: Pickup / Drop-off
+      y1 = drawField(col1X, y1, 'PICKUP PLACE', day.pickupPlace, colW)
+      y1 = drawField(col1X, y1, 'PICKUP TIME', day.pickupTime, colW, true)
+      y1 = drawField(col1X, y1, 'DROP-OFF PLACE', day.dropoffPlace, colW)
+      y1 = drawField(col1X, y1, 'DROP-OFF TIME', day.dropoffTime, colW, true)
+      if (day.accommodation) {
+        doc.rect(col1X, y1, colW, 2).fill(hexToRgb(GOLD))
+        y1 += 2
+        y1 = drawField(col1X, y1, 'LƯU TRÚ', day.accommodation, colW)
+      }
+
+      // Column 2: Meals
+      fill(GOLD).fontSize(6).font('Helvetica').text('BỮA ĂN', col2X, y2 + 4, { characterSpacing: 2 })
+      y2 += 18
+      const mw = (colW - 10) / 3
+      ;[
+        { label: 'SÁNG', value: day.meals.breakfast },
+        { label: 'TRƯA', value: day.meals.lunch },
+        { label: 'TỐI', value: day.meals.dinner },
+      ].forEach((meal, i) => {
+        const mx = col2X + i * (mw + 5)
+        const mh = Math.max(52, doc.heightOfString(String(meal.value), { width: mw - 14 }) + 28)
+        doc.rect(mx, y2, mw, mh).fill(hexToRgb(NAVY_DARK))
+        fill(GOLD).fontSize(6).font('Helvetica').text(meal.label, mx + 7, y2 + 7, { characterSpacing: 1 })
+        fill(CREAM).fontSize(8).font('Helvetica').text(String(meal.value), mx + 7, y2 + 20, { width: mw - 14 })
+      })
+      y2 += 70
+
+      // Column 2: Transportation
+      if (day.transportation && day.transportation.length > 0) {
+        fill(GOLD).fontSize(6).font('Helvetica').text('PHƯƠNG TIỆN', col2X, y2 + 4, { characterSpacing: 2 })
+        y2 += 18
+        day.transportation.forEach(t => {
+          doc.rect(col2X, y2, colW, 58).fill(hexToRgb(NAVY_DARK))
+          doc.rect(col2X, y2, 3, 58).fill(hexToRgb(GOLD))
+          fill(GOLD).fontSize(7).font('Helvetica')
+            .text(`${t.type}${t.flightNumber ? ' · ' + t.flightNumber : ''}`, col2X + 10, y2 + 8)
+          fill(CREAM).fontSize(7).font('Helvetica').text(t.class, col2X + colW - 60, y2 + 8)
+          fill(GOLD).fontSize(14).font('Helvetica-Bold').text(t.etd, col2X + 10, y2 + 22)
+          fill(CREAM).fontSize(8).font('Helvetica').text(t.departure, col2X + 10, y2 + 38)
+          fill(CREAM).fontSize(12).text('→', col2X + colW / 2 - 8, y2 + 24)
+          fill(GOLD).fontSize(14).font('Helvetica-Bold').text(t.eta, col2X + colW - 60, y2 + 22)
+          fill(CREAM).fontSize(8).font('Helvetica').text(t.arrival, col2X + colW - 60, y2 + 38)
+          y2 += 64
+        })
+      }
+
+      // Footer
+      doc.rect(0, H - 30, W, 30).fill(hexToRgb(NAVY_DARK))
+      fill(GOLD).fontSize(7).font('Helvetica')
+        .text('Indochina Travel Pro', 50, H - 18, { characterSpacing: 2 })
+      fill(GOLD).fontSize(7).font('Helvetica')
+        .text(`Ngày ${day.dayNumber} / ${itinerary.request.duration}`, W - 150, H - 18)
+    })
+
+    doc.end()
   })
-
-  const styles = StyleSheet.create({
-    page: { backgroundColor: NAVY_DARK, padding: 0, fontFamily: 'Helvetica' },
-    coverPage: { backgroundColor: NAVY_DARK, flexDirection: 'column', justifyContent: 'space-between' },
-    coverBody: { padding: '60px 60px 0' },
-    logoText: { color: CREAM, fontSize: 22, marginBottom: 4 },
-    logoSub: { color: GOLD, fontSize: 8, letterSpacing: 4 },
-    coverTitle: { color: CREAM, fontSize: 60, fontWeight: 'bold', lineHeight: 1.05, marginTop: 60, marginBottom: 8 },
-    coverSubtitle: { color: GOLD, fontSize: 26 },
-    divider: { height: 1, backgroundColor: GOLD, opacity: 0.3, marginVertical: 30, marginHorizontal: 60 },
-    coverBottom: { backgroundColor: NAVY_MED, padding: '20px 60px', flexDirection: 'row', justifyContent: 'space-between' },
-    metaLabel: { color: GOLD, fontSize: 7, letterSpacing: 3, marginBottom: 3 },
-    metaValue: { color: CREAM, fontSize: 10 },
-    // Summary
-    summaryPage: { backgroundColor: CREAM, padding: '50px 60px' },
-    summaryTitle: { color: NAVY_DARK, fontSize: 36, marginBottom: 6 },
-    summaryDivider: { height: 1, backgroundColor: GOLD, marginBottom: 24 },
-    overviewText: { color: NAVY, fontSize: 11, lineHeight: 1.7, marginBottom: 20 },
-    gridRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
-    gridBox: { flex: 1, backgroundColor: NAVY_DARK, padding: '12px 14px' },
-    gridLabel: { color: GOLD, fontSize: 7, letterSpacing: 3, marginBottom: 5 },
-    gridValue: { color: CREAM, fontSize: 11 },
-    hlItem: { flexDirection: 'row', marginBottom: 6, alignItems: 'flex-start' },
-    hlBullet: { color: GOLD, marginRight: 8, fontSize: 8 },
-    hlText: { color: NAVY, fontSize: 10, lineHeight: 1.5, flex: 1 },
-    // Day pages
-    dayPage: { backgroundColor: '#f5ede0', flexDirection: 'column' },
-    dayHeader: { backgroundColor: NAVY_DARK, padding: '24px 50px', flexDirection: 'row', alignItems: 'center', gap: 16 },
-    dayNumBox: { width: 52, height: 52, borderWidth: 1, borderColor: GOLD, alignItems: 'center', justifyContent: 'center' },
-    dayNumLabel: { color: GOLD, fontSize: 6, letterSpacing: 2 },
-    dayNum: { color: CREAM, fontSize: 26 },
-    dayTitle: { color: CREAM, fontSize: 18, flex: 1, lineHeight: 1.3 },
-    dayImage: { height: 130, objectFit: 'cover', width: '100%' },
-    dayBody: { padding: '18px 50px 24px', flexDirection: 'row', gap: 18, flex: 1 },
-    col: { flex: 1, gap: 10 },
-    fieldBox: { backgroundColor: NAVY_DARK, padding: '10px 12px' },
-    fieldLabel: { color: GOLD, fontSize: 6, letterSpacing: 3, marginBottom: 5 },
-    fieldValue: { color: CREAM, fontSize: 10, lineHeight: 1.4 },
-    fieldValueLg: { color: GOLD, fontSize: 14 },
-    mealRow: { flexDirection: 'row', gap: 5 },
-    mealBox: { flex: 1, backgroundColor: NAVY_DARK, padding: '8px 8px' },
-    mealLabel: { color: GOLD, fontSize: 6, letterSpacing: 2, marginBottom: 3 },
-    mealValue: { color: CREAM, fontSize: 8, lineHeight: 1.4 },
-    transportBox: { backgroundColor: NAVY, padding: '10px 12px', borderLeftWidth: 2, borderLeftColor: GOLD, marginBottom: 5 },
-    transportHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
-    transportType: { color: GOLD, fontSize: 8, letterSpacing: 2 },
-    transportClass: { color: CREAM, fontSize: 8, opacity: 0.7 },
-    transportRoute: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    transportTime: { color: GOLD, fontSize: 13 },
-    transportPlace: { color: CREAM, fontSize: 8, opacity: 0.8 },
-    transportArrow: { color: CREAM, fontSize: 14, opacity: 0.4 },
-    footer: { backgroundColor: NAVY_DARK, padding: '8px 50px', flexDirection: 'row', justifyContent: 'space-between' },
-    footerText: { color: GOLD, fontSize: 7, letterSpacing: 2, opacity: 0.6 },
-  })
-
-  const CoverPage = () => (
-    <Page size="A4" style={styles.coverPage}>
-      <View style={styles.coverBody}>
-        <Text style={styles.logoText}>Indochina Travel</Text>
-        <Text style={styles.logoSub}>PRO · AI ITINERARY</Text>
-        <Text style={styles.coverTitle}>{itinerary.title}</Text>
-        <Text style={styles.coverSubtitle}>{itinerary.subtitle}</Text>
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.coverBottom}>
-        <View><Text style={styles.metaLabel}>Thời gian</Text><Text style={styles.metaValue}>{itinerary.request.duration} Ngày</Text></View>
-        <View><Text style={styles.metaLabel}>Khởi hành</Text><Text style={styles.metaValue}>{itinerary.request.startPoint}</Text></View>
-        <View><Text style={styles.metaLabel}>Điểm đến</Text><Text style={styles.metaValue}>{itinerary.request.destinations.join(' · ')}</Text></View>
-        <View><Text style={styles.metaLabel}>Ngày tạo</Text><Text style={styles.metaValue}>{new Date(itinerary.generatedAt).toLocaleDateString('vi-VN')}</Text></View>
-      </View>
-    </Page>
-  )
-
-  const SummaryPage = () => (
-    <Page size="A4" style={styles.summaryPage}>
-      <Text style={styles.summaryTitle}>Tổng Quan Hành Trình</Text>
-      <View style={styles.summaryDivider} />
-      <View style={styles.gridRow}>
-        <View style={styles.gridBox}><Text style={styles.gridLabel}>Thời gian</Text><Text style={styles.gridValue}>{itinerary.request.duration} Ngày</Text></View>
-        <View style={styles.gridBox}><Text style={styles.gridLabel}>Khởi hành</Text><Text style={styles.gridValue}>{itinerary.request.startPoint}</Text></View>
-        <View style={styles.gridBox}><Text style={styles.gridLabel}>Số người</Text><Text style={styles.gridValue}>{itinerary.request.groupSize || 'N/A'}</Text></View>
-        <View style={styles.gridBox}><Text style={styles.gridLabel}>Phong cách</Text><Text style={styles.gridValue}>{itinerary.request.travelStyle || 'Standard'}</Text></View>
-      </View>
-      <Text style={styles.overviewText}>{itinerary.overview}</Text>
-      {itinerary.highlights.map((h, i) => (
-        <View key={i} style={styles.hlItem}>
-          <Text style={styles.hlBullet}>◆</Text>
-          <Text style={styles.hlText}>{h}</Text>
-        </View>
-      ))}
-    </Page>
-  )
-
-  const DayPage = ({ day }: { day: DayData }) => (
-    <Page size="A4" style={styles.dayPage}>
-      <View style={styles.dayHeader}>
-        <View style={styles.dayNumBox}>
-          <Text style={styles.dayNumLabel}>Ngày</Text>
-          <Text style={styles.dayNum}>{day.dayNumber}</Text>
-        </View>
-        <Text style={styles.dayTitle}>{day.highlights}</Text>
-      </View>
-      {day.imageUrl && <Image src={day.imageUrl} style={styles.dayImage} />}
-      <View style={styles.dayBody}>
-        <View style={styles.col}>
-          <View style={styles.fieldBox}>
-            <Text style={styles.fieldLabel}>PICKUP PLACE</Text>
-            <Text style={styles.fieldValue}>{day.pickupPlace}</Text>
-          </View>
-          <View style={styles.fieldBox}>
-            <Text style={styles.fieldLabel}>PICKUP TIME</Text>
-            <Text style={styles.fieldValueLg}>{day.pickupTime}</Text>
-          </View>
-          <View style={styles.fieldBox}>
-            <Text style={styles.fieldLabel}>DROP-OFF PLACE</Text>
-            <Text style={styles.fieldValue}>{day.dropoffPlace}</Text>
-          </View>
-          <View style={styles.fieldBox}>
-            <Text style={styles.fieldLabel}>DROP-OFF TIME</Text>
-            <Text style={styles.fieldValueLg}>{day.dropoffTime}</Text>
-          </View>
-          {day.accommodation && (
-            <View style={{ ...styles.fieldBox, borderLeftWidth: 2, borderLeftColor: GOLD }}>
-              <Text style={styles.fieldLabel}>LƯU TRÚ</Text>
-              <Text style={styles.fieldValue}>{day.accommodation}</Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.col}>
-          <Text style={styles.fieldLabel}>BỮA ĂN</Text>
-          <View style={styles.mealRow}>
-            <View style={styles.mealBox}><Text style={styles.mealLabel}>SÁNG</Text><Text style={styles.mealValue}>{day.meals.breakfast}</Text></View>
-            <View style={styles.mealBox}><Text style={styles.mealLabel}>TRƯA</Text><Text style={styles.mealValue}>{day.meals.lunch}</Text></View>
-            <View style={styles.mealBox}><Text style={styles.mealLabel}>TỐI</Text><Text style={styles.mealValue}>{day.meals.dinner}</Text></View>
-          </View>
-          {day.transportation && day.transportation.length > 0 && (
-            <View>
-              <Text style={{ ...styles.fieldLabel, marginTop: 10, marginBottom: 6 }}>PHƯƠNG TIỆN</Text>
-              {day.transportation.map((t, i) => (
-                <View key={i} style={styles.transportBox}>
-                  <View style={styles.transportHeader}>
-                    <Text style={styles.transportType}>{t.type}{t.flightNumber ? ` · ${t.flightNumber}` : ''}</Text>
-                    <Text style={styles.transportClass}>{t.class}</Text>
-                  </View>
-                  <View style={styles.transportRoute}>
-                    <View><Text style={styles.transportTime}>{t.etd}</Text><Text style={styles.transportPlace}>{t.departure}</Text></View>
-                    <Text style={styles.transportArrow}>→</Text>
-                    <View style={{ alignItems: 'flex-end' }}><Text style={styles.transportTime}>{t.eta}</Text><Text style={styles.transportPlace}>{t.arrival}</Text></View>
-                  </View>
-                  {t.operator && <Text style={{ ...styles.transportPlace, marginTop: 4, opacity: 0.6 }}>{t.operator}</Text>}
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Indochina Travel Pro</Text>
-        <Text style={styles.footerText}>Ngày {day.dayNumber}</Text>
-      </View>
-    </Page>
-  )
-
-  const doc = (
-    <Document title={itinerary.title} author="Indochina Travel Pro">
-      <CoverPage />
-      <SummaryPage />
-      {itinerary.days.map((day) => (
-        <DayPage key={day.dayNumber} day={day} />
-      ))}
-    </Document>
-  )
-
-  const blob = await pdf(doc).toBlob()
-  const arrayBuffer = await blob.arrayBuffer()
-  return Buffer.from(arrayBuffer)
 }

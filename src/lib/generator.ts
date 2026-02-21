@@ -96,7 +96,7 @@ export async function generateItinerary(
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
-      max_tokens: 8000,
+      max_tokens: 16384,
       response_format: { type: 'json_object' },
     })
 
@@ -104,13 +104,13 @@ export async function generateItinerary(
   } catch (err: any) {
     // Fallback to GPT-4-turbo if quota exceeded
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
-      max_tokens: 8000,
+      max_tokens: 16384,
       response_format: { type: 'json_object' },
     })
     rawResponse = completion.choices[0].message.content || '{}'
@@ -173,7 +173,7 @@ export async function* generateItineraryStream(request: ItineraryRequest) {
       { role: 'user', content: userPrompt },
     ],
     temperature: 0.7,
-    max_tokens: 8000,
+    max_tokens: 16384,
     stream: true,
     response_format: { type: 'json_object' },
   })

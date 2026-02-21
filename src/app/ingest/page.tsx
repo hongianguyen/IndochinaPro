@@ -223,7 +223,7 @@ export default function IngestPage() {
                           )}
                         </div>
                         <div className="flex-1 pt-1.5">
-                          <div className={`text-sm font-body font-500 tracking-wide
+                          <div className={`text-sm font-body font-medium tracking-wide
                             ${isActive ? 'text-gold-400' : isDone ? 'text-emerald-400' : 'text-navy-500'}
                           `}>
                             {phase.label}
@@ -253,7 +253,7 @@ export default function IngestPage() {
                 { label: 'Tiến độ', value: `${progress}%`, total: null, color: 'text-emerald-400' },
               ].map(stat => (
                 <div key={stat.label} className="card-luxury p-6 text-center">
-                  <div className={`font-mono text-3xl font-400 ${stat.color} mb-1`}>
+                  <div className={`font-mono text-3xl font-normal ${stat.color} mb-1`}>
                     {stat.value}
                     {stat.total ? <span className="text-navy-500 text-lg">/{stat.total}</span> : ''}
                   </div>

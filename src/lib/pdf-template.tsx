@@ -611,8 +611,22 @@ function ItineraryDocument({ itinerary }: { itinerary: Itinerary }) {
   )
 }
 
-export async function generatePDF(itinerary: Itinerary): Promise<Uint8Array> {
+export async function generatePDF(itinerary: Itinerary): Promise<Buffer> {
   const doc = <ItineraryDocument itinerary={itinerary} />
-  const buffer = await pdf(doc).toBuffer()
-  return buffer
+  const stream = await pdf(doc).toBuffer()
+
+  // toBuffer() may return a ReadableStream — collect chunks into Buffer
+  if (Buffer.isBuffer(stream)) {
+    return stream
+  }
+
+  // Handle ReadableStream
+  const reader = (stream as any).getReader()
+  const chunks: Uint8Array[] = []
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    if (value) chunks.push(value)
+  }
+  return Buffer.concat(chunks)
 }

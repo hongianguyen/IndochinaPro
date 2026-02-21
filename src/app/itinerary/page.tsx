@@ -128,7 +128,7 @@ export default function ItineraryPage() {
               AI-Generated · {days.length} Ngày
               <div className="h-px w-8 bg-gold-500/40" />
             </div>
-            <h1 className="font-display text-5xl md:text-7xl text-cream-100 font-300 leading-tight">
+            <h1 className="font-display text-5xl md:text-7xl text-cream-100 font-light leading-tight">
               {title}
             </h1>
             <p className="font-display text-2xl text-gold-400/80 italic">{subtitle}</p>

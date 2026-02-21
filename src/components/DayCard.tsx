@@ -41,7 +41,7 @@ function TransportBadge({ transport }: { transport: TransportDetail }) {
           {transport.flightNumber && ` · ${transport.flightNumber}`}
           {transport.trainNumber && ` · ${transport.trainNumber}`}
         </span>
-        <span className={`text-xs font-mono font-500 px-2 py-1 border ${color}`}>
+        <span className={`text-xs font-mono font-medium px-2 py-1 border ${color}`}>
           {transport.class}
         </span>
       </div>
@@ -171,7 +171,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                   <div className="label-field mb-2 text-[10px]">
                     📍 Pickup Place
                   </div>
-                  <div className="text-cream-100 text-sm font-500">{day.pickupPlace}</div>
+                  <div className="text-cream-100 text-sm font-medium">{day.pickupPlace}</div>
                 </div>
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">
@@ -187,7 +187,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                   <div className="label-field mb-2 text-[10px]">
                     🏨 Drop-off Place
                   </div>
-                  <div className="text-cream-100 text-sm font-500">{day.dropoffPlace}</div>
+                  <div className="text-cream-100 text-sm font-medium">{day.dropoffPlace}</div>
                 </div>
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">

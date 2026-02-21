@@ -1,3 +1,5 @@
+import 'server-only'
+
 /**
  * Unsplash Image Fetcher
  * Fetches destination images for PDF export

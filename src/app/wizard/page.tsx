@@ -234,11 +234,11 @@ function Step4Interests({
             `}
           >
             <div className="text-2xl mb-2">{interest.emoji}</div>
-            <div className={`text-sm font-body font-500 mb-1
+            <div className={`text-sm font-body font-medium mb-1
               ${value.includes(interest.id) ? 'text-gold-400' : 'text-cream-100'}`}>
               {interest.id}
             </div>
-            <div className="text-navy-400 text-xs font-300">{interest.desc}</div>
+            <div className="text-navy-400 text-xs font-light">{interest.desc}</div>
           </button>
         ))}
       </div>

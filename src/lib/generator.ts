@@ -1,3 +1,5 @@
+import 'server-only'
+
 /**
  * Itinerary Generator — GPT-4o + RAG
  * Generates structured 7-field day-by-day itineraries

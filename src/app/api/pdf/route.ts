@@ -20,13 +20,20 @@ export async function POST(req: NextRequest) {
 
     const pdfBuffer = await generatePDF(itinerary)
 
-    const fileName = `${itinerary.title.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '-')}.pdf`
+    // Convert Uint8Array → Buffer (required for Next.js Response)
+    const buffer = Buffer.from(pdfBuffer)
 
-    return new Response(pdfBuffer, {
+    const fileName = itinerary.title
+      .replace(/[^\w\s]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .concat('.pdf')
+
+    return new Response(buffer, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${encodeURIComponent(fileName)}"`,
-        'Content-Length': pdfBuffer.length.toString(),
+        'Content-Length': String(buffer.length),
       },
     })
   } catch (err: any) {

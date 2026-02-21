@@ -106,7 +106,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1 }}
-          className="font-display text-6xl md:text-8xl font-300 leading-[0.9] 
+          className="font-display text-6xl md:text-8xl font-light leading-[0.9] 
                      text-cream-100 mb-4 max-w-4xl"
         >
           Hành Trình
@@ -118,7 +118,7 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="font-body text-navy-300 text-lg font-300 mb-2 tracking-wide"
+          className="font-body text-navy-300 text-lg font-light mb-2 tracking-wide"
         >
           Xây dựng bởi AI · Lấy cảm hứng từ 2,000 chương trình thực tế
         </motion.p>
@@ -196,7 +196,7 @@ export default function HomePage() {
                 {f.icon}
               </div>
               <h3 className="font-display text-xl text-cream-100 mb-2">{f.title}</h3>
-              <p className="text-navy-300 text-sm font-300 leading-relaxed">{f.desc}</p>
+              <p className="text-navy-300 text-sm font-light leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </motion.div>

@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy-950: #040c1a;
+  --navy-900: #08152a;
+  --navy-800: #0d1f3d;
+  --navy-700: #122a52;
+  --navy-600: #1a3a6b;
+  --gold-500: #d4a017;
+  --gold-400: #fbbf24;
+  --gold-300: #fcd34d;
+  --cream-100: #f9f2e3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--navy-950);
+  color: var(--cream-100);
+  font-family: 'Jost', system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Luxury scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold-500);
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(212, 160, 23, 0.3);
+  color: var(--cream-100);
+}
+
+@layer components {
+  .btn-gold {
+    @apply bg-gold-gradient text-navy-900 font-body font-600 px-8 py-3 
+           tracking-widest uppercase text-sm transition-all duration-300
+           hover:shadow-gold hover:scale-105 active:scale-100;
+  }
+  
+  .btn-outline-gold {
+    @apply border border-gold-500 text-gold-400 font-body font-500 px-8 py-3 
+           tracking-widest uppercase text-sm transition-all duration-300
+           hover:bg-gold-500 hover:text-navy-900;
+  }
+
+  .card-luxury {
+    @apply bg-navy-800 border border-navy-600 rounded-sm shadow-luxury
+           hover:border-gold-500/30 transition-all duration-300;
+  }
+
+  .text-display {
+    @apply font-display font-300 tracking-wide;
+  }
+
+  .divider-gold {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500 to-transparent my-8;
+  }
+
+  .label-field {
+    @apply text-gold-500 text-xs tracking-widest uppercase font-body font-500;
+  }
+
+  .input-luxury {
+    @apply bg-navy-900 border border-navy-600 text-cream-100 px-4 py-3 w-full
+           font-body focus:outline-none focus:border-gold-500 transition-colors
+           placeholder:text-navy-400;
+  }
+
+  .badge-transport {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs tracking-wider
+           uppercase font-500 border;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,0.03) 25%, 
+      rgba(212, 160, 23, 0.08) 50%, 
+      rgba(255,255,255,0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+/* Progress bar glow */
+.progress-gold {
+  background: linear-gradient(90deg, #d4a017, #fbbf24, #d4a017);
+  background-size: 200%;
+  animation: shimmer 2s infinite;
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.5);
+}
+
+/* Page transitions */
+.page-enter {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Ornamental divider */
+.ornament::before,
+.ornament::after {
+  content: '◆';
+  color: var(--gold-500);
+  font-size: 0.5rem;
+  margin: 0 1rem;
+  opacity: 0.6;
+}

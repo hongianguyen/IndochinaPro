@@ -1,15 +1,17 @@
 import 'server-only'
 import path from 'path'
 import fs from 'fs/promises'
+import OpenAI from 'openai'
 
 const USE_SUPABASE = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY)
 
-// ─── Supabase Search ───────────────────────────────────────────────────────────
+// Top-level client — avoids dynamic import mangling in production builds
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+// ─── Supabase Search ────────────────────────────────────────────────────────
 async function supabaseSearch(query: string, k: number): Promise<string[]> {
   const { createClient } = await import('@supabase/supabase-js')
-  const { OpenAI } = await import('openai')
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_KEY!
@@ -31,13 +33,13 @@ async function supabaseSearch(query: string, k: number): Promise<string[]> {
   return (data || []).map((d: any) => d.content)
 }
 
-// ─── Public API ────────────────────────────────────────────────────────────────
+// ─── Public API ─────────────────────────────────────────────────────────────
 export async function retrieveRelevantTours(query: string, k = 8): Promise<string[]> {
   try {
     if (USE_SUPABASE) {
       return await supabaseSearch(query, k)
     }
-    return [] // No vector store available — AI generates without RAG
+    return [] // No vector store — AI generates without RAG context
   } catch (err) {
     console.error('RAG error:', err)
     return []
@@ -48,7 +50,7 @@ export async function ingestDocuments(
   files: Array<{ name: string; content: string }>,
   onProgress: (current: number, total: number, file: string, vectors: number) => void
 ) {
-  throw new Error('Dung script ingest-supabase.mjs de nap du lieu')
+  throw new Error('Use ingest-supabase.mjs script to ingest documents')
 }
 
 export async function getVectorStoreStatus() {

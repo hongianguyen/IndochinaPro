@@ -46,7 +46,7 @@ export async function enrichDaysWithImages(days: any[]): Promise<any[]> {
   return Promise.all(
     days.map(async (day) => {
       const imageUrl = await fetchDestinationImage(
-        day.imageQuery || day.dropoffPlace || 'Vietnam travel'
+        day.imageKeyword || day.dropoffPlace || 'Vietnam travel'
       )
       return { ...day, imageUrl }
     })

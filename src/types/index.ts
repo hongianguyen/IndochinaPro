@@ -36,11 +36,14 @@ export interface DayData {
   /** 7. Transportation Details */
   transportation: TransportDetail[]
 
+  /** 8. Experience narrative (1-2 paragraphs, English) */
+  experience?: string
+
   /** Optional enrichment */
   activities?: string[]
   accommodation?: string
   notes?: string
-  imageQuery?: string // for Unsplash fetch
+  imageKeyword?: string // for Unsplash / image fetch
   imageUrl?: string
 }
 

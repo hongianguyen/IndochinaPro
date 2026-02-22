@@ -3,29 +3,30 @@
 import { motion } from 'framer-motion'
 import {
   MapPin, Clock, Coffee, Utensils, Moon,
-  Car, Plane, Ship, Train, ChevronDown, ChevronUp
+  Car, Plane, Ship, Train, ChevronDown, ChevronUp,
+  Sparkles
 } from 'lucide-react'
 import { useState } from 'react'
 import type { DayData, TransportDetail } from '@/types'
 
 const TRANSPORT_ICONS: Record<string, React.ReactNode> = {
-  Car:       <Car size={12} />,
-  Flight:    <Plane size={12} />,
-  Boat:      <Ship size={12} />,
-  Ferry:     <Ship size={12} />,
+  Car: <Car size={12} />,
+  Flight: <Plane size={12} />,
+  Boat: <Ship size={12} />,
+  Ferry: <Ship size={12} />,
   Speedboat: <Ship size={12} />,
-  Train:     <Train size={12} />,
-  Bus:       <Car size={12} />,
+  Train: <Train size={12} />,
+  Bus: <Car size={12} />,
 }
 
 const TRANSPORT_COLORS: Record<string, string> = {
-  Car:       'border-blue-500/50 text-blue-400',
-  Flight:    'border-purple-500/50 text-purple-400',
-  Boat:      'border-cyan-500/50 text-cyan-400',
-  Ferry:     'border-cyan-500/50 text-cyan-400',
+  Car: 'border-blue-500/50 text-blue-400',
+  Flight: 'border-purple-500/50 text-purple-400',
+  Boat: 'border-cyan-500/50 text-cyan-400',
+  Ferry: 'border-cyan-500/50 text-cyan-400',
   Speedboat: 'border-cyan-500/50 text-cyan-400',
-  Train:     'border-orange-500/50 text-orange-400',
-  Bus:       'border-gray-500/50 text-gray-400',
+  Train: 'border-orange-500/50 text-orange-400',
+  Bus: 'border-gray-500/50 text-gray-400',
 }
 
 function TransportBadge({ transport }: { transport: TransportDetail }) {
@@ -92,7 +93,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
         {/* Day number */}
         <div className="flex-shrink-0">
           <div className="w-14 h-14 border border-gold-500/50 flex flex-col items-center justify-center">
-            <div className="text-gold-500 text-xs tracking-widest uppercase">Ngày</div>
+            <div className="text-gold-500 text-xs tracking-widest uppercase">Day</div>
             <div className="font-display text-2xl text-cream-100 leading-none">
               {day.dayNumber}
             </div>
@@ -101,7 +102,8 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
 
         {/* Summary */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-display text-xl text-cream-100 mb-2 leading-snug">
+          {/* Highlights — primary visual emphasis */}
+          <h3 className="font-display text-xl text-gold-400 mb-1.5 leading-snug">
             {day.highlights}
           </h3>
           <div className="flex flex-wrap items-center gap-4 text-xs text-navy-400">
@@ -128,7 +130,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
         </div>
       </button>
 
-      {/* Expanded Content — 7 Fields */}
+      {/* Expanded Content */}
       {expanded && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -147,13 +149,28 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
             </div>
           )}
 
+          {/* Experience Narrative */}
+          {day.experience && (
+            <div className="px-6 pt-5 pb-2">
+              <div className="flex items-center gap-2 label-field mb-2">
+                <Sparkles size={11} className="text-gold-500" />
+                Experience
+              </div>
+              <div className="border-l-2 border-gold-500/40 pl-4">
+                <p className="text-navy-300 text-sm leading-relaxed italic">
+                  {day.experience}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="p-6 grid md:grid-cols-2 gap-6">
             {/* LEFT COLUMN */}
             <div className="space-y-5">
-              {/* Field 1: Highlights (already in header, show activities here) */}
+              {/* Activities */}
               {day.activities && day.activities.length > 0 && (
                 <div>
-                  <div className="label-field mb-2">Hoạt động trong ngày</div>
+                  <div className="label-field mb-2">Day Activities</div>
                   <ul className="space-y-1.5">
                     {day.activities.map((act, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-navy-300">
@@ -165,7 +182,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               )}
 
-              {/* Fields 2 & 3: Pickup */}
+              {/* Fields: Pickup */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">
@@ -181,7 +198,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               </div>
 
-              {/* Fields 4 & 5: Drop-off */}
+              {/* Fields: Drop-off */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">
@@ -200,14 +217,14 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
 
             {/* RIGHT COLUMN */}
             <div className="space-y-5">
-              {/* Field 6: Meals */}
+              {/* Field: Meals */}
               <div>
-                <div className="label-field mb-3">Bữa ăn (Meals)</div>
+                <div className="label-field mb-3">Meals</div>
                 <div className="space-y-2">
                   {[
-                    { label: 'Sáng', value: day.meals.breakfast, icon: <Coffee size={12} /> },
-                    { label: 'Trưa', value: day.meals.lunch, icon: <Utensils size={12} /> },
-                    { label: 'Tối', value: day.meals.dinner, icon: <Moon size={12} /> },
+                    { label: 'B — Breakfast', value: day.meals.breakfast, icon: <Coffee size={12} /> },
+                    { label: 'L — Lunch', value: day.meals.lunch, icon: <Utensils size={12} /> },
+                    { label: 'D — Dinner', value: day.meals.dinner, icon: <Moon size={12} /> },
                   ].map(meal => (
                     <div key={meal.label} className="flex items-start gap-3 bg-navy-900 px-4 py-3 border border-navy-700">
                       <div className="text-gold-500 mt-0.5 flex-shrink-0">{meal.icon}</div>
@@ -220,10 +237,10 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               </div>
 
-              {/* Field 7: Transportation Details */}
+              {/* Field: Transportation */}
               {day.transportation && day.transportation.length > 0 && (
                 <div>
-                  <div className="label-field mb-3">Phương tiện (Transportation)</div>
+                  <div className="label-field mb-3">Transportation</div>
                   <div className="space-y-3">
                     {day.transportation.map((t, i) => (
                       <TransportBadge key={i} transport={t} />
@@ -235,7 +252,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
               {/* Accommodation */}
               {day.accommodation && (
                 <div className="bg-gold-500/5 border border-gold-500/20 p-4">
-                  <div className="label-field mb-1 text-[10px]">🏨 Lưu trú</div>
+                  <div className="label-field mb-1 text-[10px]">🏨 Accommodation</div>
                   <div className="text-cream-100 text-sm">{day.accommodation}</div>
                 </div>
               )}

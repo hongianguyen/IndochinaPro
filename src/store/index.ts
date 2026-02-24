@@ -32,6 +32,7 @@ interface ItineraryState {
   isGenerating: boolean
   error: string | null
   setCurrent: (itinerary: Itinerary) => void
+  updateDays: (days: Itinerary['days']) => void
   setGenerating: (v: boolean) => void
   setError: (e: string | null) => void
   clearCurrent: () => void
@@ -49,6 +50,10 @@ export const useItineraryStore = create<ItineraryState>()(
           current: itinerary,
           history: [itinerary, ...state.history.slice(0, 9)],
         })),
+      updateDays: (days) =>
+        set((state) => ({
+          current: state.current ? { ...state.current, days } : null,
+        })),
       setGenerating: (isGenerating) => set({ isGenerating }),
       setError: (error) => set({ error }),
       clearCurrent: () => set({ current: null }),
@@ -56,6 +61,51 @@ export const useItineraryStore = create<ItineraryState>()(
     { name: 'itinerary-store' }
   )
 )
+
+// ─── Chat Store (AI Revision Assistant) ─────────────────────────────────────
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  timestamp: string
+  isRefining?: boolean // true while waiting for AI response
+}
+
+interface ChatState {
+  messages: ChatMessage[]
+  isRefining: boolean
+  addMessage: (msg: Omit<ChatMessage, 'id' | 'timestamp'>) => void
+  setRefining: (v: boolean) => void
+  clearChat: () => void
+}
+
+export const useChatStore = create<ChatState>()((set) => ({
+  messages: [{
+    id: 'welcome',
+    role: 'assistant',
+    content: "I'm your AI Travel Assistant. I can help you refine this itinerary — try asking me to swap activities, change hotels, adjust the schedule, or add new experiences to any day.",
+    timestamp: new Date().toISOString(),
+  }],
+  isRefining: false,
+  addMessage: (msg) =>
+    set((state) => ({
+      messages: [...state.messages, {
+        ...msg,
+        id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        timestamp: new Date().toISOString(),
+      }],
+    })),
+  setRefining: (isRefining) => set({ isRefining }),
+  clearChat: () => set({
+    messages: [{
+      id: 'welcome',
+      role: 'assistant',
+      content: "I'm your AI Travel Assistant. I can help you refine this itinerary — try asking me to swap activities, change hotels, adjust the schedule, or add new experiences to any day.",
+      timestamp: new Date().toISOString(),
+    }],
+    isRefining: false,
+  }),
+}))
 
 // ─── Ingestion Store ───────────────────────────────────────────────────────────
 interface IngestionState {

@@ -14,7 +14,7 @@ import { randomUUID } from 'crypto'
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 // ─── Master Travel Consultant System Prompt ──────────────────────────────────
-function buildSystemPrompt(knowledgeBlock: string): string {
+function buildSystemPrompt(knowledgeBlock: string, totalDays: number): string {
   return `You are a MASTER TRAVEL CONSULTANT for Indochina Travel Pro — a premium luxury travel brand serving discerning travelers from North America and Canada. You have 20+ years of expertise curating bespoke journeys across Vietnam, Cambodia, Laos, Myanmar, and Thailand.
 
 YOUR PERSONA:
@@ -24,10 +24,18 @@ YOUR PERSONA:
 - Reference specific cultural insights, local knowledge, and insider tips
 - All output MUST be in professional English — ABSOLUTELY NO Vietnamese
 
+═══════════════════════════════════════════════════════
+ABSOLUTE RULE — NUMBER OF DAYS: ${totalDays}
+You MUST generate EXACTLY ${totalDays} day objects in the "days" array.
+The "days" array MUST contain exactly ${totalDays} elements.
+dayNumber must go from 1 to ${totalDays} — no skipping, no stopping early.
+DO NOT stop at 1 day. DO NOT abbreviate. Generate ALL ${totalDays} days.
+═══════════════════════════════════════════════════════
+
 MANDATORY OUTPUT RULES:
 Every day MUST return a JSON object with EXACTLY these fields:
 
-1. "highlights" — Key destinations separated by " | " (e.g. "Hanoi Old Quarter | Temple of Literature | Hoan Kiem Lake")
+1. "highlights" — Key destinations separated by " | " using format "CITY NAME - ACTIVITY/TOUR" (e.g. "HANOI - CITY TOUR | HA LONG BAY - OVERNIGHT CRUISE")
 2. "experience" — 1-2+ eloquent English paragraphs describing the day's immersive activities, cultural significance, and sensory details. This is the SOUL of each day — make it unforgettable.
 3. "pickupPlace" — Specific pickup location name
 4. "pickupTime" — Time in HH:MM format
@@ -51,7 +59,8 @@ QUALITY STANDARDS:
 
 ${knowledgeBlock}
 
-CRITICAL: Return PURE JSON only — no markdown code blocks, no prose outside the JSON. The JSON must be valid and parseable.`
+CRITICAL: Return PURE JSON only — no markdown code blocks, no prose outside the JSON. The JSON must be valid and parseable.
+CRITICAL: The "days" array MUST have EXACTLY ${totalDays} elements. This is NON-NEGOTIABLE.`
 }
 
 function buildUserPrompt(
@@ -67,6 +76,9 @@ function buildUserPrompt(
     ? `\n\nRECOMMENDED HOTELS (from Hotel Master Database — prioritize these):\n${hotelSuggestions}`
     : ''
 
+  // Build day list to reinforce the count
+  const dayList = Array.from({ length: request.duration }, (_, i) => `Day ${i + 1}`).join(', ')
+
   return `Craft a ${request.duration}-day extraordinary journey for:
 
 CLIENT PROFILE:
@@ -79,6 +91,9 @@ CLIENT PROFILE:
 ${contextSection}
 ${hotelSection}
 
+IMPORTANT: You MUST generate ALL ${request.duration} days: ${dayList}.
+Each day must be a separate object in the "days" array.
+
 Return a JSON object with this EXACT structure:
 {
   "title": "Evocative, aspirational journey title (English)",
@@ -88,35 +103,37 @@ Return a JSON object with this EXACT structure:
   "days": [
     {
       "dayNumber": 1,
-      "highlights": "Hanoi Old Quarter | Hoan Kiem Lake | Temple of Literature",
-      "experience": "Your Indochina odyssey begins in the ancient heart of Hanoi, where centuries of Vietnamese civilization converge in the labyrinthine streets of the Old Quarter... [1-2+ rich paragraphs with sensory details, cultural context, and emotional resonance]",
+      "highlights": "HANOI - CITY TOUR | OLD QUARTER DISCOVERY",
+      "experience": "Your Indochina odyssey begins... [1-2+ rich paragraphs]",
       "pickupPlace": "Hotel lobby / Airport name",
       "pickupTime": "07:30",
-      "dropoffPlace": "Hotel name / Final destination",
+      "dropoffPlace": "Hotel name",
       "dropoffTime": "20:00",
       "meals": {
         "breakfast": "Buffet breakfast at Sofitel Legend Metropole",
-        "lunch": "La Badiane Restaurant — exquisite French-Vietnamese fusion",
-        "dinner": "Cha Ca La Vong — Hanoi's legendary turmeric fish since 1871"
+        "lunch": "La Badiane Restaurant — French-Vietnamese fusion",
+        "dinner": "Cha Ca La Vong — legendary turmeric fish since 1871"
       },
       "transportation": [
         {
           "type": "Car",
-          "operator": "Private luxury sedan with multilingual guide",
+          "operator": "Private luxury sedan",
           "departure": "Hanoi",
           "arrival": "Ninh Binh",
           "etd": "08:00",
           "eta": "10:30",
-          "class": "Premium",
-          "notes": "English-speaking driver and guide"
+          "class": "Premium"
         }
       ],
       "hotel": "Sofitel Legend Metropole Hanoi",
-      "activities": ["Guided cyclo tour through the 36 Old Streets", "Private boat ride on Hoan Kiem Lake"],
+      "activities": ["Guided cyclo tour", "Private boat ride"],
       "imageKeyword": "Hanoi Old Quarter Vietnam"
-    }
+    },
+    ... (continue for ALL ${request.duration} days — dayNumber 2, 3, 4... up to ${request.duration})
   ]
-}`
+}
+
+Remember: the "days" array MUST contain EXACTLY ${request.duration} day objects.`
 }
 
 export async function generateItinerary(
@@ -151,44 +168,72 @@ export async function generateItinerary(
     hotelSuggestions = suggestions.join('\n')
   }
 
-  const systemPrompt = buildSystemPrompt(knowledgeBlock)
+  const systemPrompt = buildSystemPrompt(knowledgeBlock, request.duration)
   const userPrompt = buildUserPrompt(request, ragContext, hotelSuggestions)
 
+  // Scale max_tokens based on duration — ~1200 tokens per day
+  const maxTokens = Math.min(16384, Math.max(4096, request.duration * 1500))
+
   let rawResponse = ''
+  let parsedDays: any[] = []
 
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
+  // Attempt up to 2 tries to get the correct number of days
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const messages: any[] = [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 16384,
-      response_format: { type: 'json_object' },
-    })
+      ]
 
-    rawResponse = completion.choices[0].message.content || '{}'
-  } catch (err: any) {
-    console.error('First attempt failed, retrying:', err.message)
-    // Fallback retry
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 16384,
-      response_format: { type: 'json_object' },
-    })
-    rawResponse = completion.choices[0].message.content || '{}'
+      // If retry, add a reminder about the missing days
+      if (attempt > 0 && parsedDays.length > 0) {
+        messages.push({
+          role: 'assistant',
+          content: rawResponse,
+        })
+        messages.push({
+          role: 'user',
+          content: `You only generated ${parsedDays.length} days but I need EXACTLY ${request.duration} days. Please regenerate the COMPLETE itinerary with ALL ${request.duration} days in the "days" array. Return the full JSON again.`,
+        })
+      }
+
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages,
+        temperature: 0.7,
+        max_tokens: maxTokens,
+        response_format: { type: 'json_object' },
+      })
+
+      rawResponse = completion.choices[0].message.content || '{}'
+      const parsed = JSON.parse(rawResponse)
+      parsedDays = parsed.days || []
+
+      // Check if we got enough days
+      if (parsedDays.length >= request.duration) {
+        // Success — map and return
+        return buildItinerary(parsed, request, ragContext)
+      }
+
+      console.warn(`Attempt ${attempt + 1}: Got ${parsedDays.length}/${request.duration} days, retrying...`)
+
+    } catch (err: any) {
+      console.error(`Attempt ${attempt + 1} failed:`, err.message)
+      if (attempt === 1) throw err
+    }
   }
 
+  // If we still don't have enough days, pad with placeholder days
   const parsed = JSON.parse(rawResponse)
+  return buildItinerary(parsed, request, ragContext)
+}
 
-  // Map and validate all fields per day — enforce strict schema
-  const days: DayData[] = (parsed.days || []).map((day: any, i: number) => ({
+function buildItinerary(
+  parsed: any,
+  request: ItineraryRequest,
+  ragContext: string[]
+): Itinerary {
+  let days: DayData[] = (parsed.days || []).map((day: any, i: number) => ({
     dayNumber: day.dayNumber || i + 1,
     highlights: day.highlights || `Day ${i + 1} — ${request.destinations[0] || 'Indochina Discovery'}`,
     experience: day.experience || '',
@@ -202,12 +247,12 @@ export async function generateItinerary(
       dinner: day.meals?.dinner || 'Included',
     },
     transportation: (day.transportation || []).map((t: any) => ({
-      type: t.type || 'Car',
+      type: t.type || t.mode || 'Car',
       flightNumber: t.flightNumber,
       trainNumber: t.trainNumber,
       operator: t.operator || '',
-      departure: t.departure || '',
-      arrival: t.arrival || '',
+      departure: t.departure || t.from || '',
+      arrival: t.arrival || t.to || '',
       etd: t.etd || '',
       eta: t.eta || '',
       class: t.class || 'Standard',
@@ -220,12 +265,32 @@ export async function generateItinerary(
     imageKeyword: day.imageKeyword || request.destinations[0] || 'Vietnam travel',
   }))
 
+  // Ensure we have the correct number of days — pad if needed
+  while (days.length < request.duration) {
+    const dayNum = days.length + 1
+    const destIdx = (dayNum - 1) % request.destinations.length
+    days.push({
+      dayNumber: dayNum,
+      highlights: `Day ${dayNum} — ${request.destinations[destIdx] || 'Free Day'} Exploration`,
+      experience: `Day ${dayNum} offers a wonderful opportunity to explore ${request.destinations[destIdx] || 'the region'} at your own pace. Your guide will be available to suggest hidden gems and local favorites.`,
+      pickupPlace: 'Hotel lobby',
+      pickupTime: '08:00',
+      dropoffPlace: 'Hotel',
+      dropoffTime: '18:00',
+      meals: { breakfast: 'Buffet breakfast at hotel', lunch: 'Included', dinner: 'Included' },
+      transportation: [],
+      hotel: days[days.length - 1]?.hotel || '',
+      activities: [],
+      imageKeyword: request.destinations[destIdx] || 'Vietnam travel',
+    })
+  }
+
   return {
     id: randomUUID(),
     title: parsed.title || `${request.destinations.join(' — ')} Journey`,
     subtitle: parsed.subtitle || `${request.duration}-Day Indochina Discovery`,
     request,
-    days,
+    days: days.slice(0, request.duration),
     overview: parsed.overview || '',
     highlights: parsed.highlights || [],
     generatedAt: new Date().toISOString(),
@@ -246,11 +311,12 @@ export async function* generateItineraryStream(request: ItineraryRequest) {
 
   yield {
     type: 'status',
-    message: `Found ${ragContext.length} reference programs. Crafting your bespoke itinerary...`
+    message: `Found ${ragContext.length} reference programs. Crafting your bespoke ${request.duration}-day itinerary...`
   }
 
-  const systemPrompt = buildSystemPrompt(knowledgeBlock)
+  const systemPrompt = buildSystemPrompt(knowledgeBlock, request.duration)
   const userPrompt = buildUserPrompt(request, ragContext, '')
+  const maxTokens = Math.min(16384, Math.max(4096, request.duration * 1500))
 
   const stream = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -259,7 +325,7 @@ export async function* generateItineraryStream(request: ItineraryRequest) {
       { role: 'user', content: userPrompt },
     ],
     temperature: 0.7,
-    max_tokens: 16384,
+    max_tokens: maxTokens,
     stream: true,
     response_format: { type: 'json_object' },
   })

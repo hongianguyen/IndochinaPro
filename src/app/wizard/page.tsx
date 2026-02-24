@@ -18,9 +18,9 @@ function Step1Duration({ value, onChange }: { value: number; onChange: (v: numbe
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-5xl text-cream-100 mb-3">
-          Chuyến đi bao nhiêu ngày?
+          How Many Days?
         </h2>
-        <p className="text-navy-400 font-body">Chọn thời gian hành trình mong muốn của bạn</p>
+        <p className="text-navy-400 font-body">Select your preferred journey duration</p>
       </div>
       <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
         {options.map(n => (
@@ -36,13 +36,13 @@ function Step1Duration({ value, onChange }: { value: number; onChange: (v: numbe
           >
             <span className="font-display text-4xl block">{n}</span>
             <span className="text-xs tracking-widest uppercase mt-1 block">
-              {n === 1 ? 'ngày' : 'ngày'}
+              {n === 1 ? 'day' : 'days'}
             </span>
           </button>
         ))}
       </div>
       <div className="max-w-lg mx-auto">
-        <label className="label-field block mb-2">Hoặc nhập số ngày cụ thể</label>
+        <label className="label-field block mb-2">Or enter a custom number of days</label>
         <input
           type="number"
           min={1} max={60}
@@ -57,27 +57,27 @@ function Step1Duration({ value, onChange }: { value: number; onChange: (v: numbe
 
 function Step2StartPoint({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const common = [
-    'Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Huế',
-    'Phú Quốc', 'Bangkok', 'Siem Reap', 'Vientiane'
+    'Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hue',
+    'Phu Quoc', 'Bangkok', 'Siem Reap', 'Vientiane'
   ]
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-5xl text-cream-100 mb-3">
-          Bắt đầu từ đâu?
+          Where Do You Begin?
         </h2>
-        <p className="text-navy-400 font-body">Điểm khởi hành của hành trình</p>
+        <p className="text-navy-400 font-body">Select your journey's starting point</p>
       </div>
       <div className="max-w-lg mx-auto space-y-4">
         <input
           type="text"
-          placeholder="Nhập điểm khởi hành..."
+          placeholder="Enter departure city..."
           value={value}
           onChange={e => onChange(e.target.value)}
           className="input-luxury text-lg"
         />
         <div>
-          <label className="label-field block mb-3">Điểm khởi hành phổ biến</label>
+          <label className="label-field block mb-3">Popular Departure Points</label>
           <div className="flex flex-wrap gap-2">
             {common.map(city => (
               <button
@@ -106,8 +106,8 @@ function Step3Destinations({
   const [input, setInput] = useState('')
 
   const suggestions = [
-    'Hạ Long Bay', 'Sapa', 'Ninh Bình', 'Hội An', 'Mỹ Sơn',
-    'Nha Trang', 'Đà Lạt', 'Mekong Delta', 'Phú Quốc',
+    'Ha Long Bay', 'Sapa', 'Ninh Binh', 'Hoi An', 'My Son',
+    'Nha Trang', 'Da Lat', 'Mekong Delta', 'Phu Quoc',
     'Angkor Wat', 'Phnom Penh', 'Luang Prabang', 'Vang Vieng',
     'Bangkok', 'Chiang Mai', 'Phuket', 'Krabi'
   ]
@@ -125,9 +125,9 @@ function Step3Destinations({
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-5xl text-cream-100 mb-3">
-          Muốn đến đâu?
+          Where Would You Like to Go?
         </h2>
-        <p className="text-navy-400 font-body">Chọn một hoặc nhiều điểm đến · Kéo để sắp xếp</p>
+        <p className="text-navy-400 font-body">Select one or more destinations</p>
       </div>
 
       <div className="max-w-2xl mx-auto space-y-6">
@@ -157,7 +157,7 @@ function Step3Destinations({
         <div className="flex gap-2">
           <input
             type="text"
-            placeholder="Nhập tên điểm đến..."
+            placeholder="Enter a destination..."
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && add(input)}
@@ -167,13 +167,13 @@ function Step3Destinations({
             onClick={() => add(input)}
             className="btn-gold px-6 py-3"
           >
-            Thêm
+            Add
           </button>
         </div>
 
         {/* Suggestions */}
         <div>
-          <label className="label-field block mb-3">Điểm đến gợi ý</label>
+          <label className="label-field block mb-3">Suggested Destinations</label>
           <div className="flex flex-wrap gap-2">
             {suggestions.filter(s => !value.includes(s)).map(dest => (
               <button
@@ -194,16 +194,16 @@ function Step3Destinations({
 }
 
 const INTERESTS: { id: InterestTheme; emoji: string; desc: string }[] = [
-  { id: 'Culture & Heritage', emoji: '🏛️', desc: 'Đền chùa, lịch sử, kiến trúc cổ' },
-  { id: 'Food & Culinary', emoji: '🍜', desc: 'Ẩm thực địa phương, cooking class' },
-  { id: 'Family & Kids', emoji: '👨‍👩‍👧‍👦', desc: 'Phù hợp cho gia đình có trẻ em' },
-  { id: 'Adventure & Trekking', emoji: '🏔️', desc: 'Trekking, cave, zipline' },
-  { id: 'Beach & Relaxation', emoji: '🏖️', desc: 'Biển đẹp, nghỉ dưỡng, snorkeling' },
-  { id: 'Photography', emoji: '📷', desc: 'Điểm check-in đẹp, landscape' },
-  { id: 'Wildlife & Nature', emoji: '🦋', desc: 'Rừng quốc gia, động vật hoang dã' },
-  { id: 'Luxury & Wellness', emoji: '✨', desc: 'Spa, resort 5 sao, private tour' },
-  { id: 'Honeymoon & Romance', emoji: '💕', desc: 'Lãng mạn, sunset cruise, candlelight' },
-  { id: 'Budget Friendly', emoji: '💰', desc: 'Tiết kiệm, backpacker, guesthouse' },
+  { id: 'Culture & Heritage', emoji: '🏛️', desc: 'Temples, history, ancient architecture' },
+  { id: 'Food & Culinary', emoji: '🍜', desc: 'Local cuisine, cooking classes, food tours' },
+  { id: 'Family & Kids', emoji: '👨‍👩‍👧‍👦', desc: 'Family-friendly activities for all ages' },
+  { id: 'Adventure & Trekking', emoji: '🏔️', desc: 'Trekking, caving, zipline, off-the-beaten-path' },
+  { id: 'Beach & Relaxation', emoji: '🏖️', desc: 'Beautiful beaches, resort stays, snorkeling' },
+  { id: 'Photography', emoji: '📷', desc: 'Stunning photo opportunities, landscapes' },
+  { id: 'Wildlife & Nature', emoji: '🦋', desc: 'National parks, wildlife encounters' },
+  { id: 'Luxury & Wellness', emoji: '✨', desc: 'Spa retreats, 5-star resorts, private tours' },
+  { id: 'Honeymoon & Romance', emoji: '💕', desc: 'Romantic getaways, sunset cruises, candlelight' },
+  { id: 'Budget Friendly', emoji: '💰', desc: 'Value-conscious, authentic local experiences' },
 ]
 
 function Step4Interests({
@@ -217,9 +217,9 @@ function Step4Interests({
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-5xl text-cream-100 mb-3">
-          Sở thích & Chủ đề
+          Your Travel Interests
         </h2>
-        <p className="text-navy-400 font-body">Chọn tất cả những gì phù hợp với bạn</p>
+        <p className="text-navy-400 font-body">Select all themes that resonate with you</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
         {INTERESTS.map(interest => (
@@ -257,13 +257,13 @@ function Step5Special({
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-5xl text-cream-100 mb-3">
-          Yêu cầu đặc biệt
+          Special Requirements
         </h2>
-        <p className="text-navy-400 font-body">Thông tin thêm để cá nhân hóa hành trình</p>
+        <p className="text-navy-400 font-body">Additional details to personalize your journey</p>
       </div>
       <div className="max-w-lg mx-auto space-y-6">
         <div>
-          <label className="label-field block mb-2">Số người tham gia</label>
+          <label className="label-field block mb-2">Group Size</label>
           <input
             type="number" min={1} max={100}
             value={groupSize}
@@ -273,7 +273,7 @@ function Step5Special({
         </div>
 
         <div>
-          <label className="label-field block mb-3">Phong cách du lịch</label>
+          <label className="label-field block mb-3">Travel Style</label>
           <div className="grid grid-cols-3 gap-3">
             {(['Budget', 'Standard', 'Luxury'] as const).map(style => (
               <button
@@ -293,10 +293,10 @@ function Step5Special({
         </div>
 
         <div>
-          <label className="label-field block mb-2">Yêu cầu đặc biệt khác</label>
+          <label className="label-field block mb-2">Special Requirements</label>
           <textarea
             rows={4}
-            placeholder="VD: Cần xe lăn, ăn chay, dị ứng thực phẩm, trẻ em dưới 5 tuổi, kỷ niệm đặc biệt..."
+            placeholder="E.g.: Wheelchair accessible, vegetarian diet, food allergies, children under 5, anniversary celebration..."
             value={value}
             onChange={e => onChange(e.target.value)}
             className="input-luxury resize-none leading-relaxed"
@@ -309,11 +309,11 @@ function Step5Special({
 
 // ─── Main Wizard ───────────────────────────────────────────────────────────────
 const STEPS = [
-  { label: 'Thời gian', icon: <Calendar size={14} /> },
-  { label: 'Khởi hành', icon: <Compass size={14} /> },
-  { label: 'Điểm đến', icon: <MapPin size={14} /> },
-  { label: 'Sở thích', icon: <Heart size={14} /> },
-  { label: 'Chi tiết', icon: <MessageSquare size={14} /> },
+  { label: 'Duration', icon: <Calendar size={14} /> },
+  { label: 'Departure', icon: <Compass size={14} /> },
+  { label: 'Destinations', icon: <MapPin size={14} /> },
+  { label: 'Interests', icon: <Heart size={14} /> },
+  { label: 'Details', icon: <MessageSquare size={14} /> },
 ]
 
 export default function WizardPage() {
@@ -347,12 +347,12 @@ export default function WizardPage() {
         setCurrent(data.data)
         router.push('/itinerary')
       } else {
-        setError(data.error || 'Lỗi tạo lịch trình')
-        alert('Lỗi: ' + (data.error || 'Không thể tạo lịch trình'))
+        setError(data.error || 'Failed to generate itinerary')
+        alert('Error: ' + (data.error || 'Unable to generate itinerary'))
       }
     } catch (err: any) {
       setError(err.message)
-      alert('Lỗi kết nối: ' + err.message)
+      alert('Connection error: ' + err.message)
     } finally {
       setIsGenerating(false)
       setGenerating(false)
@@ -368,7 +368,7 @@ export default function WizardPage() {
           <span className="font-display text-xl text-cream-100">Indochina Travel Pro</span>
         </div>
         <div className="text-xs text-navy-500 tracking-widest uppercase">
-          Bước {step} / {STEPS.length}
+          Step {step} / {STEPS.length}
         </div>
       </header>
 
@@ -384,7 +384,7 @@ export default function WizardPage() {
                   transition-colors flex-shrink-0
                   ${step === i + 1 ? 'text-gold-400' :
                     step > i + 1 ? 'text-emerald-400 cursor-pointer' :
-                    'text-navy-600 cursor-default'}
+                      'text-navy-600 cursor-default'}
                 `}
               >
                 <div className={`
@@ -464,7 +464,7 @@ export default function WizardPage() {
             className="btn-outline-gold flex items-center gap-2 text-sm"
           >
             <ChevronLeft size={16} />
-            {step === 1 ? 'Trang chủ' : 'Quay lại'}
+            {step === 1 ? 'Home' : 'Back'}
           </button>
 
           {step < STEPS.length ? (
@@ -474,7 +474,7 @@ export default function WizardPage() {
               className={`btn-gold flex items-center gap-2 text-sm
                 ${!canNext() ? 'opacity-40 cursor-not-allowed' : ''}`}
             >
-              Tiếp theo
+              Next Step
               <ChevronRight size={16} />
             </button>
           ) : (
@@ -486,12 +486,12 @@ export default function WizardPage() {
               {isGenerating ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  AI đang tạo lịch trình...
+                  AI is crafting your journey...
                 </>
               ) : (
                 <>
                   <Sparkles size={16} />
-                  Tạo Hành Trình AI
+                  Generate AI Itinerary
                 </>
               )}
             </button>
@@ -501,5 +501,3 @@ export default function WizardPage() {
     </main>
   )
 }
-
-// Add Sparkles to imports above

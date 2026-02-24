@@ -70,6 +70,7 @@ const defaultIngestionStatus: IngestionStatus = {
   processedFiles: 0,
   currentFile: '',
   vectorsCreated: 0,
+  structuredFilesFound: [],
   errors: [],
 }
 

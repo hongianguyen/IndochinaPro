@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     // Validate
     if (!request.duration || !request.startPoint || !request.destinations?.length) {
       return Response.json(
-        { success: false, error: 'Thiếu thông tin bắt buộc' },
+        { success: false, error: 'Missing required information. Please provide duration, start point, and destinations.' },
         { status: 400 }
       )
     }
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error('Generate error:', err)
     return Response.json(
-      { success: false, error: err.message || 'Lỗi tạo lịch trình' },
+      { success: false, error: err.message || 'Failed to generate itinerary. Please try again.' },
       { status: 500 }
     )
   }

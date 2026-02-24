@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error('PDF generation error:', err)
     return Response.json(
-      { success: false, error: err.message || 'Lỗi xuất PDF' },
+      { success: false, error: err.message || 'Failed to generate PDF. Please try again.' },
       { status: 500 }
     )
   }

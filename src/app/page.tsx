@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Compass, FileText, Sparkles, ChevronRight, Upload } from 'lucide-react'
+import { Compass, FileText, Sparkles, ChevronRight, Upload, Database } from 'lucide-react'
 
 const destinations = [
-  'Hà Nội · Hạ Long · Sapa',
-  'Hội An · Đà Nẵng · Huế',
-  'TP. Hồ Chí Minh · Mekong',
+  'Hanoi · Ha Long Bay · Sapa',
+  'Hoi An · Da Nang · Hue',
+  'Ho Chi Minh City · Mekong Delta',
   'Angkor Wat · Phnom Penh',
   'Luang Prabang · Vang Vieng',
   'Bangkok · Chiang Mai · Phuket',
@@ -17,6 +17,7 @@ const destinations = [
 export default function HomePage() {
   const [destIndex, setDestIndex] = useState(0)
   const [dataReady, setDataReady] = useState(false)
+  const [structuredReady, setStructuredReady] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,10 +27,12 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    // Check if vector store exists
     fetch('/api/status')
       .then(r => r.json())
-      .then(d => setDataReady(d.vectorStoreReady))
+      .then(d => {
+        setDataReady(d.vectorStoreReady)
+        setStructuredReady(d.structuredDataReady || false)
+      })
       .catch(() => setDataReady(false))
   }, [])
 
@@ -62,31 +65,39 @@ export default function HomePage() {
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/ingest" 
-                className="text-xs tracking-widest uppercase text-navy-300 
+          <Link href="/ingest"
+            className="text-xs tracking-widest uppercase text-navy-300 
                            hover:text-gold-400 transition-colors">
             Data Manager
           </Link>
           <Link href="/wizard"
-                className="text-xs tracking-widest uppercase text-navy-300 
+            className="text-xs tracking-widest uppercase text-navy-300 
                            hover:text-gold-400 transition-colors">
-            Tạo hành trình
+            Build Itinerary
           </Link>
         </nav>
 
         {/* Data status indicator */}
-        <div className={`flex items-center gap-2 text-xs tracking-wider uppercase
+        <div className="flex items-center gap-4">
+          {structuredReady && (
+            <div className="flex items-center gap-2 text-xs tracking-wider uppercase text-blue-400">
+              <Database size={12} />
+              Knowledge Hub Active
+            </div>
+          )}
+          <div className={`flex items-center gap-2 text-xs tracking-wider uppercase
                          ${dataReady ? 'text-emerald-400' : 'text-gold-400'}`}>
-          <span className={`w-2 h-2 rounded-full animate-pulse
+            <span className={`w-2 h-2 rounded-full animate-pulse
                             ${dataReady ? 'bg-emerald-400' : 'bg-gold-400'}`} />
-          {dataReady ? 'Dữ liệu sẵn sàng' : 'Chưa có dữ liệu'}
+            {dataReady ? 'Data Ready' : 'No Data Loaded'}
+          </div>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="relative z-10 flex flex-col items-center justify-center 
                            min-h-[calc(100vh-5rem)] px-4 text-center">
-        
+
         {/* Ornamental top */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -109,9 +120,9 @@ export default function HomePage() {
           className="font-display text-6xl md:text-8xl font-light leading-[0.9] 
                      text-cream-100 mb-4 max-w-4xl"
         >
-          Hành Trình
+          Discover
           <br />
-          <span className="italic text-gold-400">Đông Dương</span>
+          <span className="italic text-gold-400">Indochina</span>
         </motion.h1>
 
         <motion.p
@@ -120,7 +131,7 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="font-body text-navy-300 text-lg font-light mb-2 tracking-wide"
         >
-          Xây dựng bởi AI · Lấy cảm hứng từ 2,000 chương trình thực tế
+          Crafted by AI · Inspired by 2,000+ Real Tour Programs
         </motion.p>
 
         {/* Animated destination ticker */}
@@ -151,7 +162,7 @@ export default function HomePage() {
           <Link href="/wizard">
             <button className="btn-gold flex items-center gap-2 animate-pulse-gold">
               <Sparkles size={16} />
-              Tạo Hành Trình AI
+              Build AI Itinerary
               <ChevronRight size={16} />
             </button>
           </Link>
@@ -160,7 +171,7 @@ export default function HomePage() {
             <Link href="/ingest">
               <button className="btn-outline-gold flex items-center gap-2">
                 <Upload size={16} />
-                Nạp Dữ Liệu 2000 Tour
+                Load Tour Data
               </button>
             </Link>
           )}
@@ -176,18 +187,18 @@ export default function HomePage() {
           {[
             {
               icon: <Upload size={20} />,
-              title: '2,000 Chương Trình',
-              desc: 'RAG từ kho dữ liệu tour thực tế của Indochina Travel',
+              title: '2,000+ Tour Programs',
+              desc: 'RAG-powered from Indochina Travel\'s curated real-world tour database',
             },
             {
               icon: <Sparkles size={20} />,
-              title: '7 Trường Dữ Liệu / Ngày',
-              desc: 'Highlights · Pickup · Drop-off · Meals · Transport',
+              title: 'Strict Data Per Day',
+              desc: 'Highlights · Pickup · Drop-off · Meals · Transport · Hotel · Experience',
             },
             {
               icon: <FileText size={20} />,
-              title: 'Xuất PDF Proposal',
-              desc: 'Template sang trọng với ảnh điểm đến từ Unsplash',
+              title: 'Premium PDF Proposal',
+              desc: 'Professional layout with destination photos and dynamic route map',
             },
           ].map((f, i) => (
             <div key={i} className="card-luxury p-6 text-left group">

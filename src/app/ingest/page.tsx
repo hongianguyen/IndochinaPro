@@ -4,11 +4,12 @@ import { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Upload, CheckCircle, AlertCircle, Loader2,
-  FileText, Database, Cpu, Sparkles, ChevronLeft
+  FileText, Database, Cpu, Sparkles, ChevronLeft,
+  BookOpen, Settings, Shield
 } from 'lucide-react'
 import Link from 'next/link'
 
-type Phase = 'idle' | 'uploading' | 'extracting' | 'reading' | 'vectorizing' | 'done' | 'error'
+type Phase = 'idle' | 'uploading' | 'extracting' | 'parsing-structured' | 'reading' | 'vectorizing' | 'done' | 'error'
 
 interface IngestState {
   phase: Phase
@@ -17,18 +18,27 @@ interface IngestState {
   processedFiles: number
   vectorsCreated: number
   currentFile: string
+  structuredFilesFound: string[]
   errors: string[]
 }
 
-const PHASES: { key: Phase; label: string; icon: React.ReactNode }[] = [
-  { key: 'uploading',   label: 'Nhận file',        icon: <Upload size={14} /> },
-  { key: 'extracting', label: 'Giải nén ZIP',      icon: <FileText size={14} /> },
-  { key: 'reading',    label: 'Đọc 2000 file',     icon: <FileText size={14} /> },
-  { key: 'vectorizing',label: 'Vector hóa AI',     icon: <Cpu size={14} /> },
-  { key: 'done',       label: 'Hoàn thành',         icon: <CheckCircle size={14} /> },
+const PHASES: { key: Phase; label: string; desc: string; icon: React.ReactNode }[] = [
+  { key: 'uploading', label: 'Receiving File', desc: 'Uploading ZIP archive', icon: <Upload size={14} /> },
+  { key: 'extracting', label: 'Extracting ZIP', desc: 'Decompressing archive', icon: <FileText size={14} /> },
+  { key: 'parsing-structured', label: 'Knowledge Hub', desc: 'Loading structured data files', icon: <Shield size={14} /> },
+  { key: 'reading', label: 'RAG Processing', desc: 'Reading unstructured documents', icon: <BookOpen size={14} /> },
+  { key: 'vectorizing', label: 'Vectorizing', desc: 'Creating AI embeddings', icon: <Cpu size={14} /> },
+  { key: 'done', label: 'Complete', desc: 'All data ingested', icon: <CheckCircle size={14} /> },
 ]
 
-const phaseOrder = ['uploading', 'extracting', 'reading', 'vectorizing', 'done']
+const phaseOrder = ['uploading', 'extracting', 'parsing-structured', 'reading', 'vectorizing', 'done']
+
+const STRUCTURED_FILE_LABELS: Record<string, { label: string; icon: React.ReactNode }> = {
+  '1_brand_guidelines.md': { label: 'Brand Guidelines', icon: <Shield size={12} /> },
+  '2_core_principles.md': { label: 'Core Principles', icon: <BookOpen size={12} /> },
+  '3_logistics_rules.json': { label: 'Logistics Rules', icon: <Settings size={12} /> },
+  '4_hotel_master.json': { label: 'Hotel Database', icon: <Database size={12} /> },
+}
 
 export default function IngestPage() {
   const [dragOver, setDragOver] = useState(false)
@@ -39,20 +49,21 @@ export default function IngestPage() {
     processedFiles: 0,
     vectorsCreated: 0,
     currentFile: '',
+    structuredFilesFound: [],
     errors: [],
   })
   const fileRef = useRef<HTMLInputElement>(null)
 
   const processFile = useCallback(async (file: File) => {
     if (!file.name.endsWith('.zip')) {
-      setState(s => ({ ...s, phase: 'error', message: 'Vui lòng chọn file ZIP' }))
+      setState(s => ({ ...s, phase: 'error', message: 'Please select a ZIP file' }))
       return
     }
 
     const formData = new FormData()
     formData.append('file', file)
 
-    setState(s => ({ ...s, phase: 'uploading', message: 'Đang tải lên...' }))
+    setState(s => ({ ...s, phase: 'uploading', message: 'Uploading...' }))
 
     try {
       const response = await fetch('/api/ingest', {
@@ -83,8 +94,9 @@ export default function IngestPage() {
               processedFiles: data.processedFiles ?? s.processedFiles,
               vectorsCreated: data.vectorsCreated ?? s.vectorsCreated,
               currentFile: data.currentFile || s.currentFile,
+              structuredFilesFound: data.structuredFilesFound || s.structuredFilesFound,
             }))
-          } catch {}
+          } catch { }
         }
       }
     } catch (err: any) {
@@ -109,7 +121,7 @@ export default function IngestPage() {
     ? Math.round((state.processedFiles / state.totalFiles) * 100)
     : 0
 
-  const isProcessing = ['uploading', 'extracting', 'reading', 'vectorizing'].includes(state.phase)
+  const isProcessing = ['uploading', 'extracting', 'parsing-structured', 'reading', 'vectorizing'].includes(state.phase)
 
   return (
     <main className="min-h-screen bg-navy-950 bg-luxury-pattern">
@@ -121,7 +133,7 @@ export default function IngestPage() {
         <div>
           <h1 className="font-display text-2xl text-cream-100">Data Ingestion Dashboard</h1>
           <p className="text-navy-400 text-xs tracking-widest uppercase mt-0.5">
-            Nạp 2,000 chương trình tour vào Vector Database
+            Load 2,000+ tour programs into the Knowledge Hub & Vector Database
           </p>
         </div>
       </header>
@@ -132,7 +144,43 @@ export default function IngestPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
           >
+            {/* Explanation of 2-stream pipeline */}
+            <div className="card-luxury p-6">
+              <div className="label-field mb-4">How It Works — Dual-Stream Pipeline</div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-gold-400 font-body font-medium text-sm">
+                    <Shield size={14} />
+                    Stream A — Structured Knowledge (Supreme Authority)
+                  </div>
+                  <p className="text-navy-300 text-xs leading-relaxed">
+                    Detects and loads 4 structured files directly into the AI system prompt:
+                  </p>
+                  <ul className="space-y-1.5">
+                    {Object.entries(STRUCTURED_FILE_LABELS).map(([file, info]) => (
+                      <li key={file} className="flex items-center gap-2 text-xs text-navy-400">
+                        {info.icon}
+                        <code className="text-navy-300 font-mono text-[10px]">{file}</code>
+                        <span className="text-navy-500">— {info.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-blue-400 font-body font-medium text-sm">
+                    <Database size={14} />
+                    Stream B — Unstructured Data (RAG Reference)
+                  </div>
+                  <p className="text-navy-300 text-xs leading-relaxed">
+                    All remaining <code className="text-navy-200">.docx</code> files are processed, chunked, and vectorized into the database for contextual AI retrieval during itinerary generation.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Drop zone */}
             <div
               onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
               onDragLeave={() => setDragOver(false)}
@@ -162,17 +210,17 @@ export default function IngestPage() {
                 </div>
                 <div>
                   <p className="font-display text-3xl text-cream-100 mb-2">
-                    Kéo thả file ZIP vào đây
+                    Drop Your ZIP File Here
                   </p>
                   <p className="text-navy-400 text-sm font-body">
-                    hoặc click để chọn file · Hỗ trợ ZIP chứa các file .docx
+                    or click to browse · Supports ZIP containing .docx + structured data files
                   </p>
                 </div>
                 <div className="flex items-center gap-8 mt-4 text-xs tracking-wider uppercase">
                   {[
-                    { label: 'Định dạng', value: '.ZIP' },
-                    { label: 'Max size', value: '500 MB' },
-                    { label: 'Documents', value: '2,000 files' },
+                    { label: 'Format', value: '.ZIP' },
+                    { label: 'Max Size', value: '50 MB' },
+                    { label: 'Documents', value: '2,000+ files' },
                   ].map(item => (
                     <div key={item.label} className="text-center">
                       <div className="text-gold-500 font-mono text-base">{item.value}</div>
@@ -194,7 +242,7 @@ export default function IngestPage() {
           >
             {/* Phase Timeline */}
             <div className="card-luxury p-8">
-              <h2 className="label-field mb-6">Tiến Trình Xử Lý</h2>
+              <h2 className="label-field mb-6">Processing Pipeline</h2>
               <div className="relative">
                 {/* Timeline line */}
                 <div className="absolute left-[18px] top-8 bottom-0 w-px bg-navy-700" />
@@ -227,6 +275,7 @@ export default function IngestPage() {
                             ${isActive ? 'text-gold-400' : isDone ? 'text-emerald-400' : 'text-navy-500'}
                           `}>
                             {phase.label}
+                            <span className="text-navy-500 text-xs ml-2 font-normal">{phase.desc}</span>
                           </div>
                           {isActive && (
                             <motion.div
@@ -245,12 +294,35 @@ export default function IngestPage() {
               </div>
             </div>
 
+            {/* Structured Data Status */}
+            {state.structuredFilesFound.length > 0 && (
+              <div className="card-luxury p-6">
+                <div className="label-field mb-4">Knowledge Hub — Structured Data Loaded</div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {Object.entries(STRUCTURED_FILE_LABELS).map(([file, info]) => {
+                    const loaded = state.structuredFilesFound.includes(file)
+                    return (
+                      <div key={file} className={`p-3 border text-center text-xs
+                        ${loaded
+                          ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400'
+                          : 'border-navy-700 text-navy-600'}
+                      `}>
+                        <div className="mb-1">{loaded ? <CheckCircle size={14} className="mx-auto" /> : info.icon}</div>
+                        <div className="font-medium">{info.label}</div>
+                        <div className="text-[10px] mt-0.5 font-mono opacity-60">{file}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Progress Stats */}
             <div className="grid grid-cols-3 gap-4">
               {[
-                { label: 'Files đã xử lý', value: state.processedFiles, total: state.totalFiles, color: 'text-gold-400' },
-                { label: 'Vectors tạo ra', value: state.vectorsCreated, total: null, color: 'text-blue-400' },
-                { label: 'Tiến độ', value: `${progress}%`, total: null, color: 'text-emerald-400' },
+                { label: 'Files Processed', value: state.processedFiles, total: state.totalFiles, color: 'text-gold-400' },
+                { label: 'Vectors Created', value: state.vectorsCreated, total: null, color: 'text-blue-400' },
+                { label: 'Progress', value: `${progress}%`, total: null, color: 'text-emerald-400' },
               ].map(stat => (
                 <div key={stat.label} className="card-luxury p-6 text-center">
                   <div className={`font-mono text-3xl font-normal ${stat.color} mb-1`}>
@@ -266,7 +338,7 @@ export default function IngestPage() {
             {state.totalFiles > 0 && (
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-navy-400 tracking-wider uppercase">
-                  <span>Tiến độ tổng thể</span>
+                  <span>Overall Progress</span>
                   <span>{progress}%</span>
                 </div>
                 <div className="h-1 bg-navy-800 overflow-hidden">
@@ -295,27 +367,43 @@ export default function IngestPage() {
               </div>
               <div>
                 <h2 className="font-display text-4xl text-cream-100 mb-2">
-                  Hoàn Thành!
+                  Ingestion Complete!
                 </h2>
                 <p className="text-navy-300 font-body">
                   {state.message}
                 </p>
               </div>
+
+              {/* Structured files summary */}
+              {state.structuredFilesFound.length > 0 && (
+                <div className="bg-navy-900/50 border border-navy-700 p-4 w-full max-w-md">
+                  <div className="label-field mb-3 text-center">Knowledge Hub Files</div>
+                  <div className="space-y-1.5">
+                    {state.structuredFilesFound.map(f => (
+                      <div key={f} className="flex items-center gap-2 text-xs text-emerald-400">
+                        <CheckCircle size={10} />
+                        <span className="font-mono">{f}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-8 text-center">
                 <div>
                   <div className="font-mono text-3xl text-gold-400">{state.vectorsCreated.toLocaleString()}</div>
-                  <div className="label-field text-navy-400 mt-1">Vectors</div>
+                  <div className="label-field text-navy-400 mt-1">Documents</div>
                 </div>
                 <div className="w-px bg-navy-700" />
                 <div>
-                  <div className="font-mono text-3xl text-gold-400">{state.processedFiles.toLocaleString()}</div>
-                  <div className="label-field text-navy-400 mt-1">Documents</div>
+                  <div className="font-mono text-3xl text-gold-400">{state.structuredFilesFound.length}</div>
+                  <div className="label-field text-navy-400 mt-1">Structured Files</div>
                 </div>
               </div>
               <Link href="/wizard">
                 <button className="btn-gold flex items-center gap-2 mt-4">
                   <Sparkles size={16} />
-                  Bắt Đầu Tạo Lịch Trình
+                  Start Building Itineraries
                 </button>
               </Link>
             </div>
@@ -330,13 +418,13 @@ export default function IngestPage() {
             className="card-luxury border-red-500/30 p-8 text-center"
           >
             <AlertCircle size={40} className="text-red-400 mx-auto mb-4" />
-            <h2 className="font-display text-2xl text-cream-100 mb-2">Có Lỗi Xảy Ra</h2>
+            <h2 className="font-display text-2xl text-cream-100 mb-2">An Error Occurred</h2>
             <p className="text-red-400 font-mono text-sm mb-6">{state.message}</p>
             <button
-              onClick={() => setState(s => ({ ...s, phase: 'idle', message: '' }))}
+              onClick={() => setState(s => ({ ...s, phase: 'idle', message: '', structuredFilesFound: [] }))}
               className="btn-outline-gold"
             >
-              Thử Lại
+              Try Again
             </button>
           </motion.div>
         )}

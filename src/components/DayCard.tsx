@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   MapPin, Clock, Coffee, Utensils, Moon,
   Car, Plane, Ship, Train, ChevronDown, ChevronUp,
-  Sparkles
+  Sparkles, Building2
 } from 'lucide-react'
 import { useState } from 'react'
 import type { DayData, TransportDetail } from '@/types'
@@ -77,6 +77,7 @@ function TransportBadge({ transport }: { transport: TransportDetail }) {
 
 export function DayCard({ day, index }: { day: DayData; index: number }) {
   const [expanded, setExpanded] = useState(index === 0)
+  const hotelName = day.hotel || day.accommodation || ''
 
   return (
     <motion.div
@@ -122,6 +123,12 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 {day.transportation[0].type}
               </span>
             )}
+            {hotelName && (
+              <span className="flex items-center gap-1 text-cream-100/60">
+                <Building2 size={10} className="text-gold-500" />
+                {hotelName}
+              </span>
+            )}
           </div>
         </div>
 
@@ -154,7 +161,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
             <div className="px-6 pt-5 pb-2">
               <div className="flex items-center gap-2 label-field mb-2">
                 <Sparkles size={11} className="text-gold-500" />
-                Experience
+                The Experience
               </div>
               <div className="border-l-2 border-gold-500/40 pl-4">
                 <p className="text-navy-300 text-sm leading-relaxed italic">
@@ -182,11 +189,11 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               )}
 
-              {/* Fields: Pickup */}
+              {/* Pickup */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">
-                    📍 Pickup Place
+                    📍 Pickup Location
                   </div>
                   <div className="text-cream-100 text-sm font-medium">{day.pickupPlace}</div>
                 </div>
@@ -198,11 +205,11 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               </div>
 
-              {/* Fields: Drop-off */}
+              {/* Drop-off */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-navy-900 p-4 border border-navy-700">
                   <div className="label-field mb-2 text-[10px]">
-                    🏨 Drop-off Place
+                    🏨 Drop-off Location
                   </div>
                   <div className="text-cream-100 text-sm font-medium">{day.dropoffPlace}</div>
                 </div>
@@ -217,7 +224,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
 
             {/* RIGHT COLUMN */}
             <div className="space-y-5">
-              {/* Field: Meals */}
+              {/* Meals */}
               <div>
                 <div className="label-field mb-3">Meals</div>
                 <div className="space-y-2">
@@ -237,7 +244,7 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               </div>
 
-              {/* Field: Transportation */}
+              {/* Transportation */}
               {day.transportation && day.transportation.length > 0 && (
                 <div>
                   <div className="label-field mb-3">Transportation</div>
@@ -249,11 +256,14 @@ export function DayCard({ day, index }: { day: DayData; index: number }) {
                 </div>
               )}
 
-              {/* Accommodation */}
-              {day.accommodation && (
+              {/* Hotel / Accommodation */}
+              {hotelName && (
                 <div className="bg-gold-500/5 border border-gold-500/20 p-4">
-                  <div className="label-field mb-1 text-[10px]">🏨 Accommodation</div>
-                  <div className="text-cream-100 text-sm">{day.accommodation}</div>
+                  <div className="label-field mb-1 text-[10px] flex items-center gap-1.5">
+                    <Building2 size={10} />
+                    Accommodation
+                  </div>
+                  <div className="text-cream-100 text-sm font-medium">{hotelName}</div>
                 </div>
               )}
             </div>

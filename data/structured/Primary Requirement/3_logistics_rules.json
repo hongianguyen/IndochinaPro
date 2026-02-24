@@ -1,0 +1,37 @@
+{
+  "routes": [
+    {
+      "from": "Hanoi",
+      "to": "Ha Long Bay",
+      "mode": "Car",
+      "class": "Private car AC",
+      "duration": "2.5 hours",
+      "notes": "Via Highway 5B. Pick-up at 08:30 AM, Drop-off at Marina at 11:30 AM."
+    },
+    {
+      "from": "Hanoi",
+      "to": "Da Nang",
+      "mode": "Flight",
+      "class": "Economy/Business",
+      "duration": "1 hour 20 mins",
+      "notes": "Vietnam Airlines or Bamboo Airways preferred."
+    },
+    {
+      "from": "Siem Reap",
+      "to": "Phnom Penh",
+      "mode": "Car",
+      "class": "Private SUV",
+      "duration": "5.5 hours",
+      "notes": "Include a stopover at Kampong Thom."
+    }
+ {
+      "from": "Hoi An",
+      "to": "Hue",
+      "mode": "Car",
+      "class": "Private Car",
+      "duration": "3 hours",
+      "notes": "by Hai Van Pass."
+    }
+
+  ]
+}

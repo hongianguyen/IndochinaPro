@@ -1,46 +1,159 @@
 import 'server-only'
-import fs from 'fs/promises'
-import path from 'path'
 import type { StructuredKnowledge, HotelEntry } from '@/types'
+
+// ─── Config ─────────────────────────────────────────────────────────────────────
+const USE_SUPABASE = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY)
+
+const STRUCTURED_FILES = [
+    '1_brand_guidelines.md',
+    '2_core_principles.md',
+    '3_logistics_rules.json',
+    '4_hotel_master.json',
+]
 
 // ─── In-Memory Cache ───────────────────────────────────────────────────────────
 let cachedKnowledge: StructuredKnowledge | null = null
 
-const DATA_DIR = path.join(process.cwd(), 'data', 'structured')
+// ─── Supabase Client (lazy) ─────────────────────────────────────────────────────
+async function getSupabase() {
+    const { createClient } = await import('@supabase/supabase-js')
+    return createClient(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_KEY!
+    )
+}
+
+// ─── Load Structured Knowledge ──────────────────────────────────────────────────
 
 /**
  * Load and cache all 4 structured knowledge files.
- * These are injected directly into the System Prompt or used for query logic.
+ * Primary: Supabase table `structured_knowledge`
+ * Fallback: Local filesystem `data/structured/`
  */
 export async function loadStructuredKnowledge(): Promise<StructuredKnowledge> {
     if (cachedKnowledge) return cachedKnowledge
 
     const knowledge: StructuredKnowledge = {}
 
-    try {
-        const brandPath = path.join(DATA_DIR, '1_brand_guidelines.md')
-        knowledge.brandGuidelines = await safeReadText(brandPath)
-    } catch { }
+    if (USE_SUPABASE) {
+        // ── Supabase Mode ──
+        try {
+            const supabase = await getSupabase()
+            const { data, error } = await supabase
+                .from('structured_knowledge')
+                .select('filename, content')
 
-    try {
-        const principlesPath = path.join(DATA_DIR, '2_core_principles.md')
-        knowledge.corePrinciples = await safeReadText(principlesPath)
-    } catch { }
+            if (!error && data && data.length > 0) {
+                for (const row of data) {
+                    applyFileContent(knowledge, row.filename, row.content)
+                }
+            }
+        } catch (err) {
+            console.error('Supabase structured knowledge load error:', err)
+        }
+    }
 
-    try {
-        const logisticsPath = path.join(DATA_DIR, '3_logistics_rules.json')
-        const raw = await safeReadText(logisticsPath)
-        if (raw) knowledge.logisticsRules = JSON.parse(raw)
-    } catch { }
+    // ── Fallback: Local filesystem (works in dev / if Supabase has no data) ──
+    if (!knowledge.brandGuidelines && !knowledge.corePrinciples &&
+        !knowledge.logisticsRules && !knowledge.hotelMaster) {
+        try {
+            const fs = await import('fs/promises')
+            const path = await import('path')
+            const DATA_DIR = path.join(process.cwd(), 'data', 'structured')
 
-    try {
-        const hotelPath = path.join(DATA_DIR, '4_hotel_master.json')
-        const raw = await safeReadText(hotelPath)
-        if (raw) knowledge.hotelMaster = JSON.parse(raw)
-    } catch { }
+            for (const filename of STRUCTURED_FILES) {
+                try {
+                    const content = await fs.readFile(path.join(DATA_DIR, filename), 'utf-8')
+                    if (content) applyFileContent(knowledge, filename, content)
+                } catch { }
+            }
+        } catch { }
+    }
 
     cachedKnowledge = knowledge
     return knowledge
+}
+
+/**
+ * Apply a file's content to the knowledge object based on filename
+ */
+function applyFileContent(knowledge: StructuredKnowledge, filename: string, content: string): void {
+    const lower = filename.toLowerCase()
+    if (lower.includes('brand_guidelines')) {
+        knowledge.brandGuidelines = content
+    } else if (lower.includes('core_principles')) {
+        knowledge.corePrinciples = content
+    } else if (lower.includes('logistics_rules')) {
+        try { knowledge.logisticsRules = JSON.parse(content) } catch {
+            knowledge.logisticsRules = content
+        }
+    } else if (lower.includes('hotel_master')) {
+        try {
+            const parsed = JSON.parse(content)
+            knowledge.hotelMaster = flattenHotelData(parsed)
+        } catch { }
+    }
+}
+
+/**
+ * Flatten nested hotel JSON (countries → cities → hotels) into HotelEntry[]
+ * Supports both flat array format and nested format
+ */
+function flattenHotelData(data: any): HotelEntry[] {
+    // Already a flat array
+    if (Array.isArray(data)) return data
+
+    // Nested format: { countries: [{ cities: [{ city, hotels: [...] }] }] }
+    const hotels: HotelEntry[] = []
+
+    const countries = data.countries || []
+    for (const country of countries) {
+        const cities = country.cities || []
+        for (const cityObj of cities) {
+            const cityName = cityObj.city || ''
+            for (const hotel of (cityObj.hotels || [])) {
+                hotels.push({
+                    name: hotel.name,
+                    city: cityName,
+                    category: hotel.notable || '',
+                    stars: hotel.stars,
+                    tags: inferHotelTags(hotel, cityName),
+                    description: hotel.notable || '',
+                    priceRange: hotel.stars >= 5 ? '$$$' : hotel.stars >= 4 ? '$$' : '$',
+                })
+            }
+        }
+    }
+
+    return hotels
+}
+
+/**
+ * Infer interest tags from hotel data (since source JSON doesn't have explicit tags)
+ */
+function inferHotelTags(hotel: any, city: string): string[] {
+    const tags: string[] = []
+    const text = `${hotel.name} ${hotel.notable || ''} ${hotel.address || ''}`.toLowerCase()
+
+    if (text.includes('spa') || text.includes('wellness') || text.includes('retreat'))
+        tags.push('Luxury & Wellness')
+    if (text.includes('beach') || text.includes('island') || text.includes('bay') || text.includes('resort'))
+        tags.push('Beach & Relaxation')
+    if (text.includes('heritage') || text.includes('colonial') || text.includes('historic') || text.includes('temple'))
+        tags.push('Culture & Heritage')
+    if (text.includes('boutique') || text.includes('romantic') || text.includes('villa'))
+        tags.push('Honeymoon & Romance')
+    if (text.includes('mountain') || text.includes('trek') || text.includes('nature') || text.includes('eco'))
+        tags.push('Adventure & Trekking')
+    if (text.includes('pool') || text.includes('panoram') || text.includes('view'))
+        tags.push('Photography')
+    if (hotel.stars >= 5)
+        tags.push('Luxury & Wellness')
+    if (hotel.stars <= 3)
+        tags.push('Budget Friendly')
+
+    // Deduplicate
+    return [...new Set(tags)]
 }
 
 /**
@@ -50,33 +163,114 @@ export function clearKnowledgeCache(): void {
     cachedKnowledge = null
 }
 
+// ─── Save Structured File ───────────────────────────────────────────────────────
+
 /**
- * Save structured files extracted from ZIP to the data/structured directory
+ * Save a structured file — to Supabase if configured, otherwise local disk
  */
 export async function saveStructuredFile(filename: string, content: string | Buffer): Promise<void> {
-    await fs.mkdir(DATA_DIR, { recursive: true })
-    const filePath = path.join(DATA_DIR, filename)
-    await fs.writeFile(filePath, content, 'utf-8')
+    const textContent = typeof content === 'string' ? content : content.toString('utf-8')
+
+    if (USE_SUPABASE) {
+        try {
+            const supabase = await getSupabase()
+            const { error } = await supabase
+                .from('structured_knowledge')
+                .upsert(
+                    { filename, content: textContent, updated_at: new Date().toISOString() },
+                    { onConflict: 'filename' }
+                )
+            if (error) {
+                console.error('Supabase save error:', error.message)
+                // If table doesn't exist, try to create it and retry
+                if (error.message.includes('does not exist') || error.code === '42P01') {
+                    await ensureSupabaseTable()
+                    const { error: retryError } = await supabase
+                        .from('structured_knowledge')
+                        .upsert(
+                            { filename, content: textContent, updated_at: new Date().toISOString() },
+                            { onConflict: 'filename' }
+                        )
+                    if (retryError) throw retryError
+                } else {
+                    throw error
+                }
+            }
+        } catch (err) {
+            console.error('Failed to save to Supabase, falling back to local:', err)
+            await saveToLocal(filename, textContent)
+        }
+    } else {
+        await saveToLocal(filename, textContent)
+    }
+
     clearKnowledgeCache()
 }
+
+/**
+ * Save to local filesystem (dev fallback)
+ */
+async function saveToLocal(filename: string, content: string): Promise<void> {
+    const fs = await import('fs/promises')
+    const path = await import('path')
+    const DATA_DIR = path.join(process.cwd(), 'data', 'structured')
+    await fs.mkdir(DATA_DIR, { recursive: true })
+    await fs.writeFile(path.join(DATA_DIR, filename), content, 'utf-8')
+}
+
+/**
+ * Create the structured_knowledge table if it doesn't exist
+ */
+async function ensureSupabaseTable(): Promise<void> {
+    try {
+        const supabase = await getSupabase()
+        await supabase.rpc('exec_sql', {
+            sql: `
+        CREATE TABLE IF NOT EXISTS structured_knowledge (
+          filename TEXT PRIMARY KEY,
+          content TEXT NOT NULL,
+          updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `
+        })
+    } catch (err) {
+        console.error('Could not auto-create table. Please create it manually:', err)
+    }
+}
+
+// ─── Check Status ───────────────────────────────────────────────────────────────
 
 /**
  * Check which structured files are available
  */
 export async function getStructuredFileStatus(): Promise<string[]> {
-    const expected = [
-        '1_brand_guidelines.md',
-        '2_core_principles.md',
-        '3_logistics_rules.json',
-        '4_hotel_master.json',
-    ]
-    const found: string[] = []
-    for (const f of expected) {
+    if (USE_SUPABASE) {
         try {
-            await fs.access(path.join(DATA_DIR, f))
-            found.push(f)
+            const supabase = await getSupabase()
+            const { data, error } = await supabase
+                .from('structured_knowledge')
+                .select('filename')
+            if (!error && data) {
+                return data
+                    .map((d: any) => d.filename)
+                    .filter((f: string) => STRUCTURED_FILES.includes(f))
+            }
         } catch { }
     }
+
+    // Fallback: local files
+    const found: string[] = []
+    try {
+        const fs = await import('fs/promises')
+        const path = await import('path')
+        const DATA_DIR = path.join(process.cwd(), 'data', 'structured')
+        for (const f of STRUCTURED_FILES) {
+            try {
+                await fs.access(path.join(DATA_DIR, f))
+                found.push(f)
+            } catch { }
+        }
+    } catch { }
     return found
 }
 
@@ -123,7 +317,6 @@ export function lookupLogistics(
 ): string | null {
     if (!rules) return null
 
-    // Try to find matching route in logistics rules
     const routes = rules.routes || rules.segments || rules
     if (!Array.isArray(routes)) return null
 
@@ -161,7 +354,6 @@ export function buildKnowledgeBlock(knowledge: StructuredKnowledge): string {
         const logisticsStr = typeof knowledge.logisticsRules === 'string'
             ? knowledge.logisticsRules
             : JSON.stringify(knowledge.logisticsRules, null, 2)
-        // Truncate if too large
         const maxLen = 4000
         const truncated = logisticsStr.length > maxLen
             ? logisticsStr.slice(0, maxLen) + '\n... [truncated — use route-specific lookup]'
@@ -179,14 +371,4 @@ export function buildKnowledgeBlock(knowledge: StructuredKnowledge): string {
     return sections.length > 0
         ? `\n\n--- STRUCTURED KNOWLEDGE HUB (Supreme Authority) ---\n${sections.join('\n\n')}\n--- END KNOWLEDGE HUB ---\n`
         : ''
-}
-
-// ─── Utilities ──────────────────────────────────────────────────────────────────
-
-async function safeReadText(filePath: string): Promise<string | undefined> {
-    try {
-        return await fs.readFile(filePath, 'utf-8')
-    } catch {
-        return undefined
-    }
 }

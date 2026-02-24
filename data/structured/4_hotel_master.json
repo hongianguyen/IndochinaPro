@@ -1,0 +1,1137 @@
+{
+  "metadata": {
+    "title": "3-Star, 4-Star & 5-Star Hotels in Vietnam, Cambodia & Laos",
+    "description": "A curated list of verified 3★, 4★, and 5★ hotels across Vietnam, Cambodia, and Laos, compiled from multiple travel platforms including Booking.com, TripAdvisor, Five Star Alliance, and tourism authority sources.",
+    "last_updated": "2025-02",
+    "sources": [
+      "Booking.com",
+      "TripAdvisor",
+      "Five Star Alliance",
+      "VnExpress (Vietnam National Tourism Administration)",
+      "HanoiVoyage",
+      "Scott Dunn Travel",
+      "Luxury Travel Expert"
+    ],
+    "total_hotels": 120
+  },
+  "countries": [
+    {
+      "country": "Vietnam",
+      "country_code": "VN",
+      "cities": [
+        {
+          "city": "Hanoi",
+          "hotels": [
+            {
+              "name": "Sofitel Legend Metropole Hanoi",
+              "stars": 5,
+              "address": "15 Ngo Quyen Street, Hoan Kiem District",
+              "notable": "Forbes 5-star rated; Vietnam's most iconic luxury hotel, est. 1901"
+            },
+            {
+              "name": "Lotte Hotel Hanoi",
+              "stars": 5,
+              "address": "54 Lieu Giai Street, Ba Dinh District",
+              "notable": "67-floor skyscraper with panoramic city views"
+            },
+            {
+              "name": "Capella Hanoi",
+              "stars": 5,
+              "address": "11-13 Le Phung Hieu, Hoan Kiem District",
+              "notable": "Operatic-themed luxury boutique hotel near the Opera House"
+            },
+            {
+              "name": "JW Marriott Hotel Hanoi",
+              "stars": 5,
+              "address": "8 Do Duc Duc Road, Me Tri, Nam Tu Liem District",
+              "notable": "Business hub hotel near National Convention Center"
+            },
+            {
+              "name": "Hilton Hanoi Opera",
+              "stars": 5,
+              "address": "1 Le Thanh Tong, Hoan Kiem District",
+              "notable": "Across from the historic Hanoi Opera House"
+            },
+            {
+              "name": "Sheraton Hanoi Hotel",
+              "stars": 5,
+              "address": "K5 Nghi Tam, 11 Xuan Dieu, Tay Ho District",
+              "notable": "Lakeside resort on West Lake"
+            },
+            {
+              "name": "InterContinental Hanoi Westlake",
+              "stars": 5,
+              "address": "1A Nghi Tam, Tay Ho District",
+              "notable": "Iconic overwater architecture on West Lake"
+            },
+            {
+              "name": "Pan Pacific Hanoi",
+              "stars": 5,
+              "address": "1 Thanh Nien Road, Ba Dinh District",
+              "notable": "Lakefront views, close to Ho Chi Minh Mausoleum"
+            },
+            {
+              "name": "Meritel Hanoi",
+              "stars": 4,
+              "address": "153 Hang Bong, Hoan Kiem District",
+              "notable": "Boutique luxury in the heart of the Old Quarter"
+            },
+            {
+              "name": "AIRA Boutique Hanoi Hotel & Spa",
+              "stars": 4,
+              "address": "Old Quarter, Hoan Kiem District",
+              "notable": "Boutique hotel with rooftop bar"
+            },
+            {
+              "name": "Wyndham Garden Hanoi",
+              "stars": 4,
+              "address": "Tay Ho District",
+              "notable": "Modern hotel near West Lake"
+            },
+            {
+              "name": "La Siesta Classic Hang Thung Hanoi Hotel",
+              "stars": 4,
+              "address": "Hang Thung, Old Quarter, Hoan Kiem District",
+              "notable": "Stylish boutique in the historic Old Quarter"
+            },
+            {
+              "name": "Peridot Grand Luxury Boutique Hotel",
+              "stars": 4,
+              "address": "Hoan Kiem District",
+              "notable": "Boutique luxury with rooftop pool"
+            },
+            {
+              "name": "De Syloia Hotel",
+              "stars": 3,
+              "address": "17A Tran Hung Dao, Hoan Kiem District",
+              "notable": "Well-reviewed boutique property near Old Quarter"
+            },
+            {
+              "name": "Au Coeur d'Hanoi Boutique Hotel",
+              "stars": 3,
+              "address": "Old Quarter, Hoan Kiem District",
+              "notable": "Charming boutique with French-Vietnamese ambiance"
+            },
+            {
+              "name": "Hanoi Allure Hotel",
+              "stars": 3,
+              "address": "Old Quarter, Hoan Kiem District",
+              "notable": "Central location, well-rated for value"
+            },
+            {
+              "name": "Hanoi Tirant Hotel",
+              "stars": 3,
+              "address": "Hoan Kiem District",
+              "notable": "Conveniently located near Hoan Kiem Lake"
+            }
+          ]
+        },
+        {
+          "city": "Ho Chi Minh City",
+          "hotels": [
+            {
+              "name": "Park Hyatt Saigon",
+              "stars": 5,
+              "address": "2 Lam Son Square, District 1",
+              "notable": "Forbes 4-star award winner; iconic downtown luxury"
+            },
+            {
+              "name": "The Reverie Saigon",
+              "stars": 5,
+              "address": "22-36 Nguyen Hue Boulevard, District 1",
+              "notable": "Forbes 4-star award winner; ultra-opulent Italian-designed interiors"
+            },
+            {
+              "name": "Caravelle Saigon",
+              "stars": 5,
+              "address": "19-23 Lam Son Square, District 1",
+              "notable": "Historic landmark opened in 1959; 24-story tower"
+            },
+            {
+              "name": "InterContinental Saigon",
+              "stars": 5,
+              "address": "Corner of Hai Ba Trung & Le Duan, District 1",
+              "notable": "Modern tower in the Central Business District"
+            },
+            {
+              "name": "Lotte Hotel Saigon",
+              "stars": 5,
+              "address": "2A-4A Ton Duc Thang, District 1",
+              "notable": "Premium hotel with river views"
+            },
+            {
+              "name": "Sherwood Residence",
+              "stars": 5,
+              "address": "127 Pasteur Street, District 3",
+              "notable": "Long-stay serviced apartments and hotel"
+            },
+            {
+              "name": "Mai House Saigon Hotel",
+              "stars": 5,
+              "address": "District 1",
+              "notable": "Contemporary design hotel in the city center"
+            },
+            {
+              "name": "Fusion Original Saigon Centre",
+              "stars": 5,
+              "address": "District 1",
+              "notable": "Wellness-focused hotel with daily spa inclusions"
+            },
+            {
+              "name": "Silverland Yen Hotel",
+              "stars": 4,
+              "address": "District 1",
+              "notable": "Rooftop pool with panoramic city views"
+            },
+            {
+              "name": "La Siesta Premium Saigon Central",
+              "stars": 4,
+              "address": "District 1",
+              "notable": "Rooftop pool; well-rated service"
+            },
+            {
+              "name": "Fusion Suites Saigon",
+              "stars": 4,
+              "address": "District 1",
+              "notable": "All-suite property with spa inclusions"
+            },
+            {
+              "name": "Palace Hotel Saigon",
+              "stars": 4,
+              "address": "56-66 Nguyen Hue Boulevard, District 1",
+              "notable": "Classic colonial-style hotel on the famous pedestrian boulevard"
+            },
+            {
+              "name": "Muong Thanh Luxury Sai Gon",
+              "stars": 4,
+              "address": "District 1",
+              "notable": "Part of Vietnam's leading domestic hotel chain"
+            },
+            {
+              "name": "EMM Hotel Saigon",
+              "stars": 3,
+              "address": "District 1",
+              "notable": "Modern boutique hotel near Ben Thanh Market"
+            },
+            {
+              "name": "Saigon Hotel",
+              "stars": 3,
+              "address": "47-49 Dong Du Street, District 1",
+              "notable": "Central location, long-established property"
+            },
+            {
+              "name": "M Hotel Saigon",
+              "stars": 3,
+              "address": "District 1",
+              "notable": "Affordable mid-range in the city center"
+            }
+          ]
+        },
+        {
+          "city": "Da Nang",
+          "hotels": [
+            {
+              "name": "InterContinental Danang Sun Peninsula Resort",
+              "stars": 5,
+              "address": "Bai Bac, Son Tra Peninsula",
+              "notable": "Forbes 4-star; dramatic clifftop resort overlooking private bay"
+            },
+            {
+              "name": "Hyatt Regency Danang Resort & Spa",
+              "stars": 5,
+              "address": "5 Truong Sa Street, Ngu Hanh Son District",
+              "notable": "Beachfront resort with waterpark"
+            },
+            {
+              "name": "Furama Resort Danang",
+              "stars": 5,
+              "address": "68 Ho Xuan Huong Street, Ngu Hanh Son District",
+              "notable": "Pioneer luxury beachfront resort in Da Nang"
+            },
+            {
+              "name": "Naman Retreat",
+              "stars": 5,
+              "address": "Truong Sa Road, Ngu Hanh Son District",
+              "notable": "Award-winning resort with stunning bamboo architecture"
+            },
+            {
+              "name": "Muong Thanh Luxury Da Nang Hotel",
+              "stars": 4,
+              "address": "270 Vo Nguyen Giap Street",
+              "notable": "Beachfront hotel with panoramic sea views"
+            },
+            {
+              "name": "ALANI Hotel",
+              "stars": 4,
+              "address": "134-136-138 Tran Bach Dang, Bac My Phu, Ngu Hanh Son",
+              "notable": "Beachfront infinity pool overlooking My Khe Beach"
+            },
+            {
+              "name": "Danang Golden Bay",
+              "stars": 4,
+              "address": "Vo Nguyen Giap Street",
+              "notable": "Gold-tiled infinity pool on the 29th floor"
+            },
+            {
+              "name": "Sala Danang Beach Hotel",
+              "stars": 4,
+              "address": "My Khe Beach, Son Tra District",
+              "notable": "Beachfront hotel with sleek modern design"
+            },
+            {
+              "name": "Le Sands Oceanfront Danang Hotel",
+              "stars": 4,
+              "address": "My Khe Beach",
+              "notable": "Highly rated for beachfront location"
+            },
+            {
+              "name": "Haian Beach Hotel & Spa",
+              "stars": 4,
+              "address": "My Khe Beach, Son Tra District",
+              "notable": "Full-service spa and beachfront access"
+            },
+            {
+              "name": "Awaken Da Nang Hotel",
+              "stars": 3,
+              "address": "My Khe Beach area",
+              "notable": "Modern mid-range hotel near the beach"
+            },
+            {
+              "name": "M Hotel Danang",
+              "stars": 3,
+              "address": "Near My Khe Beach, Ngu Hanh Son District",
+              "notable": "Outdoor pool, close to the beach"
+            }
+          ]
+        },
+        {
+          "city": "Hoi An",
+          "hotels": [
+            {
+              "name": "Four Seasons Resort The Nam Hai",
+              "stars": 5,
+              "address": "Ha My Beach, Block Ha My Dong B, Dien Ban",
+              "notable": "Forbes 5-star; 100 luxury pool villas on Ha My Beach"
+            },
+            {
+              "name": "Almanity Hoi An Resort & Spa",
+              "stars": 5,
+              "address": "326 Ly Thuong Kiet Street",
+              "notable": "Spa-focused resort near the Ancient Town"
+            },
+            {
+              "name": "Silk Sense Hoi An River Resort",
+              "stars": 5,
+              "address": "Thu Bon River, Hoi An",
+              "notable": "Riverside luxury resort with Vietnamese heritage architecture"
+            },
+            {
+              "name": "Victoria Hoi An Beach Resort & Spa",
+              "stars": 5,
+              "address": "Cua Dai Beach, Hoi An",
+              "notable": "Long-established beachfront resort"
+            },
+            {
+              "name": "Allegro Hoi An - A Little Luxury Hotel & Spa",
+              "stars": 4,
+              "address": "Hoi An Ancient Town area",
+              "notable": "Elegant boutique hotel near UNESCO heritage zone"
+            },
+            {
+              "name": "Hoi An Sincerity Hotel & Spa",
+              "stars": 4,
+              "address": "Hoi An",
+              "notable": "Modern hotel with full spa facilities"
+            },
+            {
+              "name": "Silkotel Hoi An",
+              "stars": 4,
+              "address": "Hoi An",
+              "notable": "Boutique hotel close to the Ancient Town"
+            },
+            {
+              "name": "Little Gem Hoi An Boutique Hotel & Spa",
+              "stars": 3,
+              "address": "Hoi An",
+              "notable": "Highly rated boutique with bikes included"
+            },
+            {
+              "name": "Hoi An Golden Holiday Hotel & Spa",
+              "stars": 3,
+              "address": "Hoi An",
+              "notable": "Conveniently located near the night market"
+            }
+          ]
+        },
+        {
+          "city": "Hue",
+          "hotels": [
+            {
+              "name": "Banyan Tree Lang Co",
+              "stars": 5,
+              "address": "Cu Du Village, Loc Vinh, Phu Loc District",
+              "notable": "Luxury resort at the foot of Hai Van Pass, with private pool villas"
+            },
+            {
+              "name": "Angsana Lang Co",
+              "stars": 5,
+              "address": "Cu Du Village, Loc Vinh, Phu Loc District",
+              "notable": "Sister resort to Banyan Tree; 300+ rooms with Hue-inspired architecture"
+            },
+            {
+              "name": "Melia Vinpearl Hue",
+              "stars": 5,
+              "address": "Hue City",
+              "notable": "Premium resort on the banks of the Perfume River"
+            },
+            {
+              "name": "Romance Hotel Hue",
+              "stars": 4,
+              "address": "16 Nguyen Thai Hoc Street",
+              "notable": "Elegant property near the Imperial Citadel"
+            },
+            {
+              "name": "Eco Lux Riverside Hotel & Spa",
+              "stars": 4,
+              "address": "Perfume River, Hue",
+              "notable": "Eco-friendly riverside hotel with infinity pool"
+            },
+            {
+              "name": "Hotel La Perle Hue",
+              "stars": 3,
+              "address": "Hue City",
+              "notable": "Charming boutique in a French colonial-style building"
+            },
+            {
+              "name": "Hue Serene Palace Hotel",
+              "stars": 3,
+              "address": "Hue City Center",
+              "notable": "Modern mid-range hotel close to major attractions"
+            }
+          ]
+        },
+        {
+          "city": "Nha Trang",
+          "hotels": [
+            {
+              "name": "Six Senses Ninh Van Bay",
+              "stars": 5,
+              "address": "Ninh Van Bay, Ninh Hoa Commune",
+              "notable": "Private peninsula accessible only by boat; 62 pool villas"
+            },
+            {
+              "name": "Vinpearl Resort & Spa Nha Trang Bay",
+              "stars": 5,
+              "address": "Tri Nguyen, Vinh Nguyen, Nha Trang",
+              "notable": "Private island resort with waterpark"
+            },
+            {
+              "name": "Vinpearl Beachfront Nha Trang",
+              "stars": 5,
+              "address": "Tran Phu Street, Nha Trang",
+              "notable": "Beachfront high-rise with ocean views"
+            },
+            {
+              "name": "Havana Nha Trang Hotel",
+              "stars": 5,
+              "address": "38 Tran Phu Street",
+              "notable": "Sleek 42-story tower on Nha Trang Beach"
+            },
+            {
+              "name": "Sheraton Nha Trang Hotel & Spa",
+              "stars": 5,
+              "address": "26-28 Tran Phu Street",
+              "notable": "Full-service luxury on the beachfront boulevard"
+            },
+            {
+              "name": "Emerald Bay Hotel & Spa",
+              "stars": 4,
+              "address": "100/8C/T25 Tran Phu, Loc Tho",
+              "notable": "Infinity pool overlooking Nha Trang Bay"
+            },
+            {
+              "name": "Starcity Hotel & Condotel Beachfront Nha Trang",
+              "stars": 4,
+              "address": "Nha Trang Beach",
+              "notable": "Beachfront condotel with panoramic views"
+            },
+            {
+              "name": "Comodo Nha Trang Hotel",
+              "stars": 4,
+              "address": "Nha Trang",
+              "notable": "Modern mid-luxury hotel near the beach"
+            },
+            {
+              "name": "White Sand Boutique Hotel",
+              "stars": 3,
+              "address": "Nha Trang",
+              "notable": "Cozy boutique property in the city center"
+            }
+          ]
+        },
+        {
+          "city": "Phu Quoc",
+          "hotels": [
+            {
+              "name": "New World Phu Quoc Resort",
+              "stars": 5,
+              "address": "Bai Truong, Duong To Commune",
+              "notable": "High-end beachfront resort on Phu Quoc's west coast"
+            },
+            {
+              "name": "Melia Vinpearl Phu Quoc",
+              "stars": 5,
+              "address": "Phu Quoc Island",
+              "notable": "Premium beachfront resort with Vinpearl facilities"
+            },
+            {
+              "name": "Pullman Phu Quoc Beach Resort",
+              "stars": 5,
+              "address": "Phu Quoc",
+              "notable": "Contemporary resort with wide beach frontage"
+            },
+            {
+              "name": "Best Western Premier Sonasea Villas Phu Quoc",
+              "stars": 5,
+              "address": "Phu Quoc",
+              "notable": "Private pool villas in a tropical estate"
+            },
+            {
+              "name": "Movenpick Resort Waverly Phu Quoc",
+              "stars": 5,
+              "address": "Near Ong Lang Beach, Phu Quoc",
+              "notable": "Private beach and expansive outdoor pool"
+            },
+            {
+              "name": "Ocean Bay Resort & Spa Phu Quoc",
+              "stars": 5,
+              "address": "Phu Quoc",
+              "notable": "Beachfront resort popular among couples"
+            },
+            {
+              "name": "La Veranda Resort Phu Quoc - MGallery",
+              "stars": 5,
+              "address": "Tran Hung Dao Street, Duong Dong",
+              "notable": "Colonial-inspired boutique resort on the beach"
+            },
+            {
+              "name": "Aquasun Hotel Phu Quoc",
+              "stars": 4,
+              "address": "Phu Quoc",
+              "notable": "Well-located 4-star on the island"
+            },
+            {
+              "name": "Lahana Resort Phu Quoc & Spa",
+              "stars": 3,
+              "address": "Ong Lang Beach, Phu Quoc",
+              "notable": "Quiet boutique resort on Ong Lang Beach"
+            },
+            {
+              "name": "Vinholidays Fiesta Phu Quoc",
+              "stars": 3,
+              "address": "Phu Quoc",
+              "notable": "Family-friendly mid-range resort"
+            }
+          ]
+        },
+        {
+          "city": "Ha Long Bay / Ha Long City",
+          "hotels": [
+            {
+              "name": "Vinpearl Ha Long",
+              "stars": 5,
+              "address": "Reu Island, Bai Chay Ward, Ha Long City",
+              "notable": "Private island resort accessible by boat; 384 rooms and 3 beaches"
+            },
+            {
+              "name": "Wyndham Legend Ha Long",
+              "stars": 5,
+              "address": "Ha Long City, Quang Ninh Province",
+              "notable": "Tower hotel with Ha Long Bay panoramas"
+            },
+            {
+              "name": "FLC Ha Long Hotel & Golf Club",
+              "stars": 5,
+              "address": "Ha Long City",
+              "notable": "Golf resort adjacent to Ha Long Bay"
+            },
+            {
+              "name": "Citadines Marina Halong",
+              "stars": 3,
+              "address": "Ha Long City",
+              "notable": "Serviced apartment hotel in the marina district"
+            }
+          ]
+        },
+        {
+          "city": "Sapa",
+          "hotels": [
+            {
+              "name": "Hotel de la Coupole - MGallery",
+              "stars": 5,
+              "address": "1 Hoang Dieu Street, Sapa",
+              "notable": "Art Deco-inspired mountain luxury with Fansipan views"
+            },
+            {
+              "name": "Victoria Sapa Resort & Spa",
+              "stars": 4,
+              "address": "Sapa Town",
+              "notable": "Classic mountain lodge with alpine atmosphere"
+            },
+            {
+              "name": "KK Sapa Hotel",
+              "stars": 3,
+              "address": "Sapa Town",
+              "notable": "Centrally located with terrace views"
+            },
+            {
+              "name": "Sapa Centre Hotel",
+              "stars": 3,
+              "address": "Sapa Town Center",
+              "notable": "Good value in the heart of town"
+            }
+          ]
+        },
+        {
+          "city": "Quy Nhon",
+          "hotels": [
+            {
+              "name": "Avani Quy Nhon Resort & Spa",
+              "stars": 5,
+              "address": "Ghenh Rang, Quy Nhon, Binh Dinh",
+              "notable": "Remote boutique beachfront resort near ancient Cham ruins"
+            },
+            {
+              "name": "Anantara Quy Nhon Villas",
+              "stars": 5,
+              "address": "Quy Nhon, Binh Dinh Province",
+              "notable": "Ultra-exclusive all-pool villa resort on a private beach"
+            }
+          ]
+        },
+        {
+          "city": "Mui Ne / Phan Thiet",
+          "hotels": [
+            {
+              "name": "Anantara Mui Ne Resort",
+              "stars": 5,
+              "address": "Mui Ne Beach, Phan Thiet, Binh Thuan",
+              "notable": "Beachfront oasis with private villas and tropical gardens"
+            },
+            {
+              "name": "TTC Hotel Phan Thiet",
+              "stars": 3,
+              "address": "Phan Thiet, Binh Thuan",
+              "notable": "Popular mid-range resort on the coast"
+            },
+            {
+              "name": "Le Viva Resort Mui Ne",
+              "stars": 3,
+              "address": "Mui Ne, Phan Thiet",
+              "notable": "Colorful beachside resort with pool"
+            }
+          ]
+        },
+        {
+          "city": "Da Lat",
+          "hotels": [
+            {
+              "name": "Dalat Palace Heritage Hotel",
+              "stars": 5,
+              "address": "2 Tran Phu Street, Da Lat",
+              "notable": "1922 French colonial landmark, most historic hotel in Da Lat"
+            },
+            {
+              "name": "Mercure Dalat Resort",
+              "stars": 4,
+              "address": "Da Lat",
+              "notable": "Modern hilltop resort with pine-forest views"
+            },
+            {
+              "name": "Du Parc Hotel Dalat",
+              "stars": 4,
+              "address": "7 Tran Phu, Da Lat",
+              "notable": "Heritage hotel in the French Quarter"
+            }
+          ]
+        },
+        {
+          "city": "Con Dao",
+          "hotels": [
+            {
+              "name": "Six Senses Con Dao",
+              "stars": 5,
+              "address": "Dat Doc Beach, Con Dao District, Ba Ria-Vung Tau",
+              "notable": "Remote eco-luxury all-pool villa resort on a national marine park island"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Cambodia",
+      "country_code": "KH",
+      "cities": [
+        {
+          "city": "Phnom Penh",
+          "hotels": [
+            {
+              "name": "Rosewood Phnom Penh",
+              "stars": 5,
+              "address": "Vattanac Capital Tower, 66-68 Monivong Boulevard",
+              "notable": "Towering ultra-luxury with panoramic city and river views"
+            },
+            {
+              "name": "Raffles Hotel Le Royal",
+              "stars": 5,
+              "address": "92 Rukhak Vithei Daun Penh",
+              "notable": "Historic Art Deco colonial landmark, est. 1929"
+            },
+            {
+              "name": "Sofitel Phnom Penh Phokeethra",
+              "stars": 5,
+              "address": "26 Old August 26th Boulevard",
+              "notable": "Riverside luxury with Olympic-size pool"
+            },
+            {
+              "name": "The Great Duke Phnom Penh",
+              "stars": 5,
+              "address": "Phnom Penh",
+              "notable": "New ultra-luxury property in the capital"
+            },
+            {
+              "name": "NagaWorld Hotel & Entertainment Complex",
+              "stars": 5,
+              "address": "Samdach Techo Hun Sen Park, Phnom Penh",
+              "notable": "Casino-resort and entertainment complex; riverside location"
+            },
+            {
+              "name": "InterContinental Phnom Penh",
+              "stars": 5,
+              "address": "296 Mao Tse Toung Boulevard",
+              "notable": "Premier business and leisure hotel in the capital"
+            },
+            {
+              "name": "Hyatt Regency Phnom Penh",
+              "stars": 5,
+              "address": "2 Street 357, Toul Kork District",
+              "notable": "Contemporary luxury near Wat Phnom"
+            },
+            {
+              "name": "Penh House Hotel",
+              "stars": 4,
+              "address": "Riverside, Phnom Penh",
+              "notable": "Eco-sustainable boutique hotel with stunning interiors"
+            },
+            {
+              "name": "Aquarius Hotel and Urban Resort",
+              "stars": 4,
+              "address": "Near Tonle Sap River, Phnom Penh",
+              "notable": "Saltwater infinity pool; open-air restaurant"
+            },
+            {
+              "name": "Fairfield by Marriott Phnom Penh",
+              "stars": 4,
+              "address": "Phnom Penh",
+              "notable": "Modern Marriott brand mid-upscale property"
+            },
+            {
+              "name": "Luxcity Hotel & Apartment",
+              "stars": 4,
+              "address": "Phnom Penh",
+              "notable": "Popular with tourists; central location"
+            },
+            {
+              "name": "Somerset Norodom Phnom Penh",
+              "stars": 4,
+              "address": "Norodom Boulevard, Phnom Penh",
+              "notable": "Serviced apartments and hotel suites"
+            },
+            {
+              "name": "Citadines Flatiron Phnom Penh",
+              "stars": 4,
+              "address": "Phnom Penh",
+              "notable": "Contemporary serviced apartment hotel"
+            },
+            {
+              "name": "Baitong Hotel & Resort",
+              "stars": 4,
+              "address": "Phnom Penh",
+              "notable": "Popular mid-upscale resort-style hotel"
+            },
+            {
+              "name": "Sunway Hotel Phnom Penh",
+              "stars": 4,
+              "address": "Phnom Penh",
+              "notable": "Business hotel near key commercial areas"
+            },
+            {
+              "name": "Smile Boutique Hotel by EHM",
+              "stars": 4,
+              "address": "Near Wat Phnom, Phnom Penh",
+              "notable": "Well-maintained boutique with outdoor pool"
+            },
+            {
+              "name": "Caravan Hotel by EHM",
+              "stars": 4,
+              "address": "City Center, Phnom Penh",
+              "notable": "Rooftop pool, popular with budget-luxury travelers"
+            },
+            {
+              "name": "Lavanya Boutique Hotel",
+              "stars": 3,
+              "address": "Near Riverside Park, Phnom Penh",
+              "notable": "Centrally located boutique in the city"
+            },
+            {
+              "name": "Poulo Wai Hotel (Trademark by Wyndham)",
+              "stars": 3,
+              "address": "Phnom Penh City Center",
+              "notable": "Part of the Wyndham collection; free WiFi"
+            }
+          ]
+        },
+        {
+          "city": "Siem Reap",
+          "hotels": [
+            {
+              "name": "Park Hyatt Siem Reap",
+              "stars": 5,
+              "address": "Sivatha Road, Siem Reap",
+              "notable": "#1 Best Hotel in Cambodia (DestinAsian 2025); heritage Khmer-Art Deco architecture"
+            },
+            {
+              "name": "Raffles Grand Hotel d'Angkor",
+              "stars": 5,
+              "address": "1 Vithei Charles de Gaulle, Siem Reap",
+              "notable": "Historic colonial hotel est. 1932; largest free-form pool in Cambodia"
+            },
+            {
+              "name": "Amansara",
+              "stars": 5,
+              "address": "Road to Angkor, Siem Reap",
+              "notable": "Former royal guesthouse of King Sihanouk; ultra-exclusive 24-suite retreat"
+            },
+            {
+              "name": "Sofitel Angkor Phokeethra Golf & Spa Resort",
+              "stars": 5,
+              "address": "Vithei Charles de Gaulle, Siem Reap",
+              "notable": "Largest free-form swimming pool; golf course adjacent"
+            },
+            {
+              "name": "Anantara Angkor Resort and Spa",
+              "stars": 5,
+              "address": "National Road 6, Siem Reap",
+              "notable": "Cambodian-inspired design near Angkor Wat"
+            },
+            {
+              "name": "Shinta Mani Angkor & Bensley Collection Pool Villas",
+              "stars": 5,
+              "address": "Junction of Oum Chhay & 14th Street, Siem Reap",
+              "notable": "Bill Bensley designed boutique luxury; 15 min from Angkor Wat"
+            },
+            {
+              "name": "Borei Angkor Resort and Spa",
+              "stars": 5,
+              "address": "National Road 6, Siem Reap",
+              "notable": "Boutique resort with private pool villas"
+            },
+            {
+              "name": "Sokha Angkor Resort",
+              "stars": 5,
+              "address": "National Road 6, Phum Taphul, Siem Reap",
+              "notable": "Large resort complex near Angkor Archaeological Park"
+            },
+            {
+              "name": "Angkor Village Resort",
+              "stars": 5,
+              "address": "Siem Reap",
+              "notable": "Boutique resort in a lush garden setting; traditional Khmer wooden houses"
+            },
+            {
+              "name": "Phum Baitang",
+              "stars": 5,
+              "address": "Siem Reap",
+              "notable": "45 luxurious stilted villas in a green village setting"
+            },
+            {
+              "name": "Pub Street Hotel",
+              "stars": 3,
+              "address": "Pub Street area, Siem Reap",
+              "notable": "Central location near Pub Street nightlife"
+            },
+            {
+              "name": "Angkor Century Resort & Spa",
+              "stars": 4,
+              "address": "Siem Reap",
+              "notable": "Well-appointed resort close to Angkor Wat complex"
+            },
+            {
+              "name": "Tara Angkor Hotel",
+              "stars": 4,
+              "address": "National Road 6, Siem Reap",
+              "notable": "Khmer-inspired architecture with large pool"
+            }
+          ]
+        },
+        {
+          "city": "Sihanoukville / Koh Rong",
+          "hotels": [
+            {
+              "name": "Song Saa Private Island",
+              "stars": 5,
+              "address": "Koh Rong Archipelago, Sihanoukville Province",
+              "notable": "Cambodia's only overwater villas; private island retreat"
+            },
+            {
+              "name": "Six Senses Krabey Island",
+              "stars": 5,
+              "address": "Krabey Island, Preah Sihanouk Province",
+              "notable": "Private island with jungle bungalows and private beach"
+            }
+          ]
+        },
+        {
+          "city": "Kampot / Kep",
+          "hotels": [
+            {
+              "name": "Shinta Mani Wild",
+              "stars": 5,
+              "address": "Cardamom Mountains, near Kampot / Koh Kong border",
+              "notable": "Luxury tented camp in 400 acres of private wildlife reserve"
+            },
+            {
+              "name": "The Narrows Boutique Hotel",
+              "stars": 3,
+              "address": "Kampot",
+              "notable": "Riverside boutique overlooking the Kampot River"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Laos",
+      "country_code": "LA",
+      "cities": [
+        {
+          "city": "Vientiane",
+          "hotels": [
+            {
+              "name": "Crowne Plaza Vientiane by IHG",
+              "stars": 5,
+              "address": "Samsenthai Road, Vientiane",
+              "notable": "City-center luxury; 15 min from Wattay International Airport"
+            },
+            {
+              "name": "Muong Thanh Luxury Vientiane Hotel",
+              "stars": 5,
+              "address": "Thadeau Road, Thatkhao Village, Sisattanak District",
+              "notable": "Tallest building in Vientiane; panoramic city views"
+            },
+            {
+              "name": "Lao Plaza Hotel",
+              "stars": 5,
+              "address": "63 Samsenthai Road, Vientiane",
+              "notable": "First official 5-star hotel in Laos; 142 rooms in the business district"
+            },
+            {
+              "name": "Landmark Mekong Riverside Hotel",
+              "stars": 5,
+              "address": "Vientiane, Mekong Riverside",
+              "notable": "Panoramic Mekong River views; multiple dining options"
+            },
+            {
+              "name": "Amari Vientiane",
+              "stars": 5,
+              "address": "Vientiane",
+              "notable": "Highly rated Thai-managed luxury hotel"
+            },
+            {
+              "name": "Settha Palace Hotel",
+              "stars": 5,
+              "address": "6 Pang Kham Street, Vientiane",
+              "notable": "80-year-old family-run French colonial boutique gem"
+            },
+            {
+              "name": "Souphattra Heritage Vientiane",
+              "stars": 5,
+              "address": "Near Laos National Museum, Vientiane",
+              "notable": "Heritage-style property with outdoor pool"
+            },
+            {
+              "name": "Holiday Inn & Suites Vientiane by IHG",
+              "stars": 4,
+              "address": "Vientiane",
+              "notable": "Reliable international brand in the city center"
+            },
+            {
+              "name": "Azalea Parkview Hotel",
+              "stars": 4,
+              "address": "Vientiane",
+              "notable": "Well-reviewed hotel with pool; popular with long-stay guests"
+            },
+            {
+              "name": "Apatuxay Vientiane Hotel & Apartment",
+              "stars": 3,
+              "address": "Near Patuxai Monument, Vientiane",
+              "notable": "Budget-luxury close to the iconic Patuxai Arc"
+            }
+          ]
+        },
+        {
+          "city": "Luang Prabang",
+          "hotels": [
+            {
+              "name": "Amantaka",
+              "stars": 5,
+              "address": "55/3 Kingkitsarath Road, Luang Prabang",
+              "notable": "Laos Leading Hotel (World Travel Awards); former colonial hospital converted to luxury resort"
+            },
+            {
+              "name": "Rosewood Luang Prabang",
+              "stars": 5,
+              "address": "10 minutes from Luang Prabang town, Nong Kiau River area",
+              "notable": "Tented villas designed by Bill Bensley; Sense Spa; riverside setting"
+            },
+            {
+              "name": "Sofitel Luang Prabang",
+              "stars": 5,
+              "address": "Ban Mano, Luang Prabang",
+              "notable": "Former French Governor's residence (1900s); 25 suites with private gardens"
+            },
+            {
+              "name": "Pullman Luang Prabang",
+              "stars": 5,
+              "address": "4.3 km from Nahm Dong Park, Luang Prabang",
+              "notable": "123-room resort with private art gallery"
+            },
+            {
+              "name": "Avani+ Luang Prabang Hotel",
+              "stars": 5,
+              "address": "UNESCO World Heritage Zone, Luang Prabang",
+              "notable": "25-yard pool; spa and golf facilities"
+            },
+            {
+              "name": "La Résidence Phou Vao",
+              "stars": 5,
+              "address": "Luang Prabang",
+              "notable": "Hillside boutique hotel with sweeping valley views"
+            },
+            {
+              "name": "Satri House",
+              "stars": 5,
+              "address": "Luang Prabang Historic Center",
+              "notable": "Antique-filled rooms; gorgeous garden pool; former royal residence"
+            },
+            {
+              "name": "The Luang Say Residence",
+              "stars": 5,
+              "address": "Luang Prabang",
+              "notable": "Boutique riverside property; sister to the Luang Say river cruise"
+            },
+            {
+              "name": "U Luang Prabang",
+              "stars": 5,
+              "address": "Luang Prabang",
+              "notable": "Boutique design hotel in a quiet residential neighborhood"
+            },
+            {
+              "name": "3 Nagas Hotel Luang Prabang - MGallery",
+              "stars": 5,
+              "address": "Luang Prabang Heritage Zone",
+              "notable": "Three restored colonial houses in the UNESCO heritage area"
+            },
+            {
+              "name": "Kiridara Luang Prabang",
+              "stars": 4,
+              "address": "Near Monument to President Souphanouvong, Luang Prabang",
+              "notable": "Wellness center with steam room, sauna, and foot bath"
+            },
+            {
+              "name": "Le Sen Boutique Hotel",
+              "stars": 4,
+              "address": "Near Luang Prabang Historic Center",
+              "notable": "Minimalist modern design; excellent value"
+            },
+            {
+              "name": "Le Bel Air Resort Luang Prabang",
+              "stars": 4,
+              "address": "Luang Prabang",
+              "notable": "Pool villa resort with garden setting"
+            },
+            {
+              "name": "Villa Maly Boutique Hotel",
+              "stars": 4,
+              "address": "Luang Prabang",
+              "notable": "French-Lao colonial boutique property"
+            },
+            {
+              "name": "Burasari Heritage Luang Prabang",
+              "stars": 4,
+              "address": "Luang Prabang",
+              "notable": "Thai-managed boutique near Ock Pop Tok"
+            },
+            {
+              "name": "Le Bougainvillier",
+              "stars": 3,
+              "address": "Luang Prabang Riverside",
+              "notable": "Riverside boutique with garden bungalows"
+            },
+            {
+              "name": "Parasol Blanc",
+              "stars": 3,
+              "address": "Luang Prabang",
+              "notable": "Charming pool villa guesthouse near the town center"
+            }
+          ]
+        },
+        {
+          "city": "Vang Vieng",
+          "hotels": [
+            {
+              "name": "Tmark Resort Vangvieng",
+              "stars": 5,
+              "address": "Vang Vieng",
+              "notable": "Luxury riverside resort with mountain views"
+            },
+            {
+              "name": "The Elephant Crossing Hotel",
+              "stars": 4,
+              "address": "Vang Vieng, Nam Song River",
+              "notable": "Riverside boutique with limestone karst views"
+            }
+          ]
+        },
+        {
+          "city": "Pakse / Champasak",
+          "hotels": [
+            {
+              "name": "Daosavanh Resort & Spa Hotel",
+              "stars": 4,
+              "address": "Pakse, Champasak Province",
+              "notable": "Largest resort in southern Laos; near Si Phan Don (4000 Islands)"
+            },
+            {
+              "name": "The River Resort",
+              "stars": 5,
+              "address": "Champasak, Mekong River",
+              "notable": "28-room eco-luxury resort overlooking the Mekong; near Vat Phou UNESCO site"
+            }
+          ]
+        },
+        {
+          "city": "Nong Khiaw",
+          "hotels": [
+            {
+              "name": "Mandala Ou",
+              "stars": 4,
+              "address": "Nam Ou River, Nong Khiaw",
+              "notable": "Stylish boutique with spectacular valley views; trekking base"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

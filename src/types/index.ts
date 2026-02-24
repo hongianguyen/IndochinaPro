@@ -6,15 +6,15 @@ export type TransportType = 'Car' | 'Flight' | 'Boat' | 'Ferry' | 'Train' | 'Bus
 export type ServiceClass = 'Economy' | 'Business' | 'First Class' | 'Private' | 'Standard' | 'Premium'
 export type MealType = 'Included' | 'Not Included' | 'Optional'
 
-// ─── Core Day Structure (strict JSON schema) ──────────────────────────────────
+// ─── Core Day Structure (7 bắt buộc fields) ───────────────────────────────────
 export interface DayData {
   dayNumber: number
   date?: string
 
-  /** 1. Highlights: key destinations separated by " | " */
+  /** 1. Highlights / Headline: key destinations separated by " | " */
   highlights: string
 
-  /** 2. Experience: 1-2 rich English paragraphs */
+  /** 2. Experience: blended step-by-step itinerary + atmospheric narrative */
   experience: string
 
   /** 3. Pickup: location & time */
@@ -75,11 +75,11 @@ export type InterestTheme =
   | 'Honeymoon & Romance'
 
 export interface ItineraryRequest {
-  duration: number
-  startPoint: string
-  destinations: string[]
-  interests: InterestTheme[]
-  specialRequirements?: string
+  duration: number                    // Step 1: số ngày
+  startPoint: string                  // Step 2: điểm bắt đầu
+  destinations: string[]              // Step 3: điểm đến mong muốn
+  interests: InterestTheme[]          // Step 4: sở thích
+  specialRequirements?: string        // Step 5: yêu cầu đặc biệt
   groupSize?: number
   travelStyle?: 'Budget' | 'Standard' | 'Luxury'
 }
@@ -93,25 +93,7 @@ export interface Itinerary {
   overview: string
   highlights: string[]
   generatedAt: string
-  ragSources?: string[]
-}
-
-// ─── Structured Knowledge Hub ──────────────────────────────────────────────────
-export interface StructuredKnowledge {
-  brandGuidelines?: string       // 1_brand_guidelines.md
-  corePrinciples?: string        // 2_core_principles.md
-  logisticsRules?: any           // 3_logistics_rules.json (parsed)
-  hotelMaster?: HotelEntry[]     // 4_hotel_master.json (parsed)
-}
-
-export interface HotelEntry {
-  name: string
-  city: string
-  category: string
-  stars?: number
-  tags: string[]              // matched against user interests
-  description?: string
-  priceRange?: string
+  ragSources?: string[]  // filenames used from vector DB
 }
 
 // ─── Ingestion / Data Pipeline ─────────────────────────────────────────────────
@@ -131,16 +113,28 @@ export interface IngestionStatus {
   processedFiles: number
   currentFile: string
   vectorsCreated: number
-  structuredFilesFound: string[]
   errors: string[]
   startedAt?: string
   completedAt?: string
+  structuredFilesFound?: string[]
 }
 
-export interface IngestionResult {
-  structured: StructuredKnowledge
-  unstructuredCount: number
-  vectorsCreated: number
+// ─── Structured Knowledge (4 authority files) ──────────────────────────────────
+export interface StructuredKnowledge {
+  brandGuidelines?: string       // 1_brand_guidelines.md
+  corePrinciples?: string        // 2_core_principles.md
+  logisticsRules?: any           // 3_logistics_rules.json (parsed)
+  hotelMaster?: HotelEntry[]     // 4_hotel_master.json (parsed)
+}
+
+export interface HotelEntry {
+  name: string
+  city: string
+  category: string
+  stars?: number
+  tags: string[]              // matched against user interests
+  description?: string
+  priceRange?: string
 }
 
 // ─── API Responses ──────────────────────────────────────────────────────────────
@@ -153,6 +147,6 @@ export interface ApiResponse<T> {
 export interface StatusResponse {
   vectorStoreReady: boolean
   documentCount: number
-  structuredDataReady: boolean
   lastIngested?: string
 }
+

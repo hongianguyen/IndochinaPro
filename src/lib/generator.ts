@@ -35,8 +35,8 @@ DO NOT stop at 1 day. DO NOT abbreviate. Generate ALL ${totalDays} days.
 MANDATORY OUTPUT RULES:
 Every day MUST return a JSON object with EXACTLY these fields:
 
-1. "highlights" — Key destinations separated by " | " using format "CITY NAME - ACTIVITY/TOUR" (e.g. "HANOI - CITY TOUR | HA LONG BAY - OVERNIGHT CRUISE")
-2. "experience" — 1-2+ eloquent English paragraphs describing the day's immersive activities, cultural significance, and sensory details. This is the SOUL of each day — make it unforgettable.
+1. "highlights" — Headline: key destinations using format "CITY NAME - ACTIVITY" separated by " | " (e.g. "HANOI - ARRIVAL | CITY TOUR", "HA LONG BAY - OVERNIGHT CRUISE")
+2. "experience" — THIS IS THE MOST IMPORTANT FIELD. Write a FULL, DETAILED day description that BLENDS step-by-step tour operator itinerary WITH atmospheric, evocative narrative. Include specific times, actions, transitions, AND sensory/cultural details woven together. It should read like a premium tour program — professional yet inspiring. Must be at least 3-4 paragraphs.
 3. "pickupPlace" — Specific pickup location name
 4. "pickupTime" — Time in HH:MM format
 5. "dropoffPlace" — Specific drop-off location name
@@ -103,30 +103,30 @@ Return a JSON object with this EXACT structure:
   "days": [
     {
       "dayNumber": 1,
-      "highlights": "HANOI - CITY TOUR | OLD QUARTER DISCOVERY",
-      "experience": "Your Indochina odyssey begins... [1-2+ rich paragraphs]",
-      "pickupPlace": "Hotel lobby / Airport name",
-      "pickupTime": "07:30",
-      "dropoffPlace": "Hotel name",
-      "dropoffTime": "20:00",
+      "highlights": "HANOI - ARRIVAL | OLD QUARTER DISCOVERY",
+      "experience": "Arrive at Noi Bai International Airport where your English-speaking guide greets you at arrivals with a warm welcome. Transfer by private car to the Sofitel Legend Metropole in the heart of the Old Quarter (approx. 45 minutes), crossing the iconic Long Bien Bridge en route.\n\nAfter checking in and freshening up, at 14:00 you step into the labyrinthine 36 Old Streets — a living museum where each lane bears the name of the guild that once defined it. The air hums with the clatter of artisan workshops as you weave through Hang Bac (Silver Street) and pause at the 11th-century Bach Ma Temple, Hanoi's oldest pagoda. At 15:30, climb aboard a cyclo for a leisurely ride through the vibrant Dong Xuan Market district, where vendors have traded for over a century.\n\nBy 16:30, savor Hanoi's legendary egg coffee at Cafe Giang — a frothy, custard-like creation invented in the 1940s when milk was scarce. Return to the hotel by 18:00 to freshen up. At 19:00, dinner awaits at Cha Ca La Vong, where turmeric-marinated fish has been served at the same address since 1871 — a true Hanoi institution.",
+      "pickupPlace": "Noi Bai International Airport",
+      "pickupTime": "12:00",
+      "dropoffPlace": "Sofitel Legend Metropole Hanoi",
+      "dropoffTime": "21:00",
       "meals": {
-        "breakfast": "Buffet breakfast at Sofitel Legend Metropole",
+        "breakfast": "On arrival — not included",
         "lunch": "La Badiane Restaurant — French-Vietnamese fusion",
         "dinner": "Cha Ca La Vong — legendary turmeric fish since 1871"
       },
       "transportation": [
         {
           "type": "Car",
-          "operator": "Private luxury sedan",
-          "departure": "Hanoi",
-          "arrival": "Ninh Binh",
-          "etd": "08:00",
-          "eta": "10:30",
+          "operator": "Private luxury sedan with guide",
+          "departure": "Noi Bai Airport",
+          "arrival": "Hanoi Old Quarter",
+          "etd": "12:30",
+          "eta": "13:15",
           "class": "Premium"
         }
       ],
       "hotel": "Sofitel Legend Metropole Hanoi",
-      "activities": ["Guided cyclo tour", "Private boat ride"],
+      "activities": ["Airport meet & greet", "Walking tour 36 Old Streets", "Cyclo ride", "Egg coffee at Cafe Giang"],
       "imageKeyword": "Hanoi Old Quarter Vietnam"
     },
     ... (continue for ALL ${request.duration} days — dayNumber 2, 3, 4... up to ${request.duration})
@@ -269,10 +269,11 @@ function buildItinerary(
   while (days.length < request.duration) {
     const dayNum = days.length + 1
     const destIdx = (dayNum - 1) % request.destinations.length
+    const dest = request.destinations[destIdx] || 'the region'
     days.push({
       dayNumber: dayNum,
-      highlights: `Day ${dayNum} — ${request.destinations[destIdx] || 'Free Day'} Exploration`,
-      experience: `Day ${dayNum} offers a wonderful opportunity to explore ${request.destinations[destIdx] || 'the region'} at your own pace. Your guide will be available to suggest hidden gems and local favorites.`,
+      highlights: `${dest.toUpperCase()} - FREE DAY EXPLORATION`,
+      experience: `After breakfast at the hotel, Day ${dayNum} offers a wonderful opportunity to explore ${dest} at your leisure. Your English-speaking guide remains available to suggest hidden gems and local favorites — from tucked-away artisan workshops to serene pagodas off the beaten path. Enjoy a leisurely lunch at a local restaurant recommended by your guide. In the afternoon, you may choose to visit a local market, take a cooking class, or simply relax at the hotel spa. Return to the hotel by 18:00. Dinner is at a local restaurant selected by your guide.`,
       pickupPlace: 'Hotel lobby',
       pickupTime: '08:00',
       dropoffPlace: 'Hotel',
@@ -281,7 +282,7 @@ function buildItinerary(
       transportation: [],
       hotel: days[days.length - 1]?.hotel || '',
       activities: [],
-      imageKeyword: request.destinations[destIdx] || 'Vietnam travel',
+      imageKeyword: dest || 'Vietnam travel',
     })
   }
 

@@ -46,14 +46,9 @@ export async function POST(req: NextRequest) {
           return
         }
 
-        // Supabase mode — no web upload
-        if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-          send({
-            phase: 'error',
-            message: 'Supabase mode active. Run: node scripts/ingest-supabase.mjs <file.zip> from terminal.',
-          })
-          return
-        }
+        // Note: Supabase mode is fine — structured files are saved to Supabase,
+        // unstructured .docx RAG files need CLI for large batches
+
 
         send({ phase: 'uploading', message: `Received file (${sizeMB.toFixed(1)}MB)...` })
 
